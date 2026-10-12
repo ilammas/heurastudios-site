@@ -27,6 +27,31 @@ function luminance(css) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
+for (const width of [1280, 834, 375]) {
+  test(`at ${width}px the hero and the closing band line up on the page's left edge, like every section heading`, async () => {
+    const { page, close } = await open('/', { viewport: { width, height: 860 } });
+    const lefts = await page.evaluate(() => {
+      const left = sel => {
+        const el = document.querySelector(sel);
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return Math.round(range.getClientRects()[0].left); // where the first line of text starts
+      };
+      return {
+        edge: left('#ov-how-title'),
+        hero: left('.ov-hero-title'),
+        sub: left('.ov-hero-sub'),
+        actions: Math.round(document.querySelector('.ov-hero-actions .ov-btn').getBoundingClientRect().left),
+        closing: left('#ov-access-title'),
+        closingLead: left('.ov-access .ov-lead'),
+        closingButton: Math.round(document.querySelector('.ov-access .ov-btn').getBoundingClientRect().left),
+      };
+    });
+    for (const [name, x] of Object.entries(lefts)) assert.ok(Math.abs(x - lefts.edge) <= 4, `${name} starts at ${x}px, the page edge is ${lefts.edge}px`);
+    await close();
+  });
+}
+
 test('everything below the hero shows without scrolling', async () => {
   const { page, errors, close } = await open('/');
   await page.waitForTimeout(400);
