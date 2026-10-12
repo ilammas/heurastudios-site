@@ -50,8 +50,8 @@
   function joined(address, already) {
     form.hidden = true;
     doneText.textContent = already
-      ? "You were already on it. We'll email " + address + ' when the Heura Studio beta opens.'
-      : "We'll email " + address + ' when the Heura Studio beta opens.';
+      ? 'You were already on it. An email will go to ' + address + ' when the Heura Studio beta opens.'
+      : 'An email will go to ' + address + ' when the Heura Studio beta opens.';
     done.hidden = false;
     done.focus();
   }
@@ -62,8 +62,8 @@
     var address = email.value.trim();
     var name = company.value.trim();
     if (address.length > 254 || !EMAIL_RE.test(address)) return say('Enter your work email, like you@company.com.', email);
-    if (!name) return say("Enter your company's name.", company);
-    if (name.length > 100) return say("Your company's name can be up to 100 characters.", company);
+    if (!name) return say("Enter your company’s name.", company);
+    if (name.length > 100) return say("Your company’s name can be up to 100 characters.", company);
     say('', null);
 
     busy = true;
@@ -82,13 +82,13 @@
       .then(function (result) {
         if (result && result.ok) return joined(address, result.already);
         ready();
-        if (result && result.error === 'email') return say("That email address doesn't look right. Check it and try again.", email);
-        if (result && result.error === 'company') return say("Check your company's name and try again.", company);
-        say("That didn't go through. Try again in a minute.", null);
+        if (result && result.error === 'email') return say("That email address doesn’t look right. Check it and try again.", email);
+        if (result && result.error === 'company') return say("Check your company’s name and try again.", company);
+        say("That didn’t go through. Try again in a minute.", null);
       })
       .catch(function () {
         ready();
-        say("That didn't go through. Check your connection and try again.", null);
+        say("That didn’t go through. Check your connection and try again.", null);
       });
   });
 })();

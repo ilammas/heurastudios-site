@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Join the waitlist – Heura Studio</title>
-<meta name="description" content="Join the Heura Studio waitlist. We'll email you when the beta opens.">
+<meta name="description" content="Join the Heura Studio waitlist and get an email when the beta opens.">
 <meta name="theme-color" content="#ffffff" data-light="#ffffff" data-dark="#000000">
-<!-- The theme: the choice saved by the switch in the header, else the system's. Set before anything paints. -->
-<script>(function(d){var t,m;try{t=localStorage.getItem('ov-theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t);d.classList.add('ov-js');m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',m.getAttribute('data-'+t))})(document.documentElement)</script>
+<!-- Set before anything paints: the appearance (the one picked under Appearance at the foot of the page, else the
+     system's), and ov-motion when things may move as they come into view (not with Reduce Motion). -->
+<script>(function(d){var t,m,w=window;try{t=localStorage.getItem('ov-theme')}catch(e){}if(t!=='light'&&t!=='dark')t=w.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t);d.classList.add('ov-js');if(w.matchMedia&&matchMedia('(prefers-reduced-motion: no-preference)').matches&&'IntersectionObserver'in w)d.classList.add('ov-motion');m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',m.getAttribute('data-'+t))})(document.documentElement)</script>
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512">
@@ -15,60 +16,35 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://heurastudios.com/waitlist/">
 <meta property="og:title" content="Join the Heura Studio waitlist">
-<meta property="og:description" content="Build your company's own AI. No code. We'll email you when the beta opens.">
+<meta property="og:description" content="Build your company's own AI. No code. Get an email when the Heura Studio beta opens.">
 <meta property="og:image" content="https://heurastudios.com/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=Newsreader:opsz,wght@6..72,300..600&display=swap">
 <link rel="stylesheet" href="/site.css">
 <link rel="stylesheet" href="/waitlist/waitlist.css">
-<script src="/theme.js" defer></script>
+<script src="/site.js" defer></script>
 <script src="/waitlist/waitlist.js" defer></script>
 </head>
 <body>
-<div id="ov-home" class="wl">
-  <header class="ov-top">
-    <div class="ov-wrap ov-top-row">
-      <a class="ov-logo" href="/"><span class="ov-mark" aria-hidden="true"></span><span class="ov-wordmark">Heura Studio</span></a>
-      <div class="ov-top-actions">
-        <button class="ov-theme" type="button" aria-label="Switch to dark mode">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <mask id="ov-moon-bite"><rect width="24" height="24" fill="#fff"/><circle class="ov-bite" cx="18" cy="6.5" r="6.5" fill="#000"/></mask>
-            <circle class="ov-orb" cx="12" cy="12" r="8" fill="currentColor" mask="url(#ov-moon-bite)"/>
-            <path class="ov-rays" d="M12 1.75v2.1M12 20.15v2.1M1.75 12h2.1M20.15 12h2.1M4.75 4.75l1.5 1.5M17.75 17.75l1.5 1.5M4.75 19.25l1.5-1.5M17.75 6.25l1.5-1.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
+<header class="ov-top">
+  <div class="ov-wrap ov-top-row">
+    <a class="ov-logo" href="/"><span class="ov-mark" aria-hidden="true"></span>Heura Studio</a>
+    <nav class="ov-nav" aria-label="Sections">
+      <a href="/#models">Models</a>
+      <a href="/#how">How it works</a>
+      <a href="/#kits">Starter kits</a>
+    </nav>
+  </div>
+</header>
 
-  <main class="wl-main">
-    <!-- Heura Arche, the base model the beta starts from, standing on its shelf -->
-    <div class="wl-art" aria-hidden="true">
-      <div class="ov-shelf wl-shelf">
-        <ul class="ov-lineup">
-          <li class="ov-slot" data-model="arche">
-            <span class="ov-contact"></span>
-            <div class="ov-riser">
-              <div class="ov-box">
-                <span class="ov-status is-available"><span class="ov-dot"></span>Available</span>
-                <div class="ov-box-foot">
-                  <p class="ov-box-name"><span>Heura</span> Arche</p>
-                  <ul class="ov-box-lines"><li>2B parameters</li><li>Text and images</li><li>Runs on a laptop</li></ul>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-        <div class="ov-plank"></div>
-      </div>
-    </div>
-
+<main class="wl-main">
+  <div class="ov-wrap wl-grid">
     <div class="wl-panel">
       <!-- Without JavaScript this posts straight to the waitlist script, which answers with a plain page. -->
       <form id="wl-form" class="wl-form" action="https://script.google.com/macros/s/AKfycbymRmy_8immz1FDS9UUhf3K3dv8k77KYyOzTlwy4SzNQUM16fwwYgfr7wcwSkxPGGZW3g/exec" method="post" novalidate>
-        <h1 class="wl-title">Join the waitlist</h1>
-        <p class="wl-lead">Heura Studio opens to beta testers soon. Leave your work email and company, and we'll email you when it's your turn.</p>
+        <h1 class="wl-title" data-reveal>Join the waitlist</h1>
+        <p class="wl-lead" data-reveal style="--d:.1s">Heura Studio opens to beta testers soon. Leave your work email and company, and you’ll get an email when it’s your turn.</p>
         <div class="wl-fields">
           <div class="wl-field">
             <label for="wl-email">Work email</label>
@@ -87,16 +63,68 @@
         </div>
         <p class="wl-error" id="wl-error" role="alert"></p>
         <button class="ov-btn ov-btn-primary wl-submit" type="submit">Join waitlist</button>
-        <p class="wl-fine">We'll only use your email to invite you to the beta.</p>
+        <p class="wl-fine">Your email is only used to invite you to the beta.</p>
       </form>
 
       <section class="wl-done" id="wl-done" tabindex="-1" aria-labelledby="wl-done-title" hidden>
-        <h1 id="wl-done-title" class="wl-title">You're on the waitlist</h1>
+        <h1 id="wl-done-title" class="wl-title">You’re on the waitlist</h1>
         <p class="wl-lead" id="wl-done-text"></p>
         <a class="ov-btn ov-btn-quiet wl-home" href="/">Back to home</a>
       </section>
     </div>
-  </main>
-</div>
+
+    <!-- The chat bubble the sample AI puts on a website (a made-up shop): it pops open shortly after the page loads,
+         and the bubble opens and closes it, like the real one. -->
+    <div class="ov-panel ov-chat wl-art" data-chat-open="load">
+      <div class="ov-chat-box">
+        <img class="ov-chat-card" src="/img/studio-chat-card.webp" width="840" height="1048" loading="lazy" decoding="async" data-theme-free
+          alt="A Heura Studio chat window on a website, greeting a visitor with “Hi! How can I help?”">
+        <button class="ov-chat-bubble" type="button" aria-expanded="true" aria-label="Close the sample chat" hidden>
+          <svg class="ov-chat-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 12.5a7.5 7.5 0 0 1-11 6.6L4.5 20l1-4A7.5 7.5 0 1 1 20 12.5z"/></svg>
+          <svg class="ov-chat-icon-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="ov-foot">
+  <div class="ov-wrap">
+    <div class="ov-foot-top">
+      <div>
+        <a class="ov-logo" href="/"><span class="ov-mark" aria-hidden="true"></span>Heura Studio</a>
+        <p class="ov-foot-by">Made by Ostravanne.</p>
+      </div>
+      <div class="ov-foot-cols">
+        <nav aria-labelledby="ov-foot-product">
+          <h2 id="ov-foot-product" class="ov-foot-title">Product</h2>
+          <ul>
+            <li><a href="/#models">Models</a></li>
+            <li><a href="/#how">How it works</a></li>
+            <li><a href="/#kits">Starter kits</a></li>
+            <li><a href="/waitlist/">Join waitlist</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h2 class="ov-foot-title">Contact</h2>
+          <ul>
+            <li><a href="mailto:ryantian@ostravanne.com,leoli@ostravanne.com">Email the founders</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ov-foot-bottom">
+      <p>© 2026 Ostravanne</p>
+      <div class="ov-appearance">
+        <span id="ov-appearance-label">Appearance</span>
+        <div class="ov-seg" role="radiogroup" aria-labelledby="ov-appearance-label">
+          <label><input type="radio" name="ov-appearance" value="system" checked><span>System</span></label>
+          <label><input type="radio" name="ov-appearance" value="light"><span>Light</span></label>
+          <label><input type="radio" name="ov-appearance" value="dark"><span>Dark</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
