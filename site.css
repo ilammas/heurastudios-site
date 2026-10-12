@@ -159,10 +159,13 @@ html, body { margin: 0; padding: 0; background: var(--page); }
 [data-theme="dark"] #ov-home .ov-rays { opacity: 1; transform: none; }
 
 /* ---- hero */
-#ov-home .ov-hero { padding: clamp(28px, 5vh, 56px) 0 clamp(80px, 10vh, 112px); text-align: center; }
-#ov-home .ov-hero-title { max-width: 12.5em; margin: 0 auto; font-size: clamp(48px, 4.2vw + 24px, 84px); line-height: 1; }
-#ov-home .ov-hero-sub { max-width: 33em; margin: 22px auto 0; font-size: 21px; line-height: 1.45; color: var(--text-2); text-wrap: balance; }
-#ov-home .ov-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
+/* The hero reads from the page's left edge, the same edge as every section heading and the case below it. The
+   headline's second sentence takes its own line; where the first doesn't fit on one, its lines are balanced. */
+#ov-home .ov-hero { padding: clamp(36px, 6vh, 72px) 0 clamp(80px, 10vh, 112px); }
+#ov-home .ov-hero-title { margin: 0; font-size: clamp(44px, 3.6vw + 26px, 80px); line-height: 1; }
+#ov-home .ov-hero-line { display: block; }
+#ov-home .ov-hero-sub { max-width: 31em; margin: 24px 0 0; font-size: 21px; line-height: 1.45; color: var(--text-2); text-wrap: pretty; }
+#ov-home .ov-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
 /* ---- the shelf and the model boxes on it */
 #ov-home .ov-shelf { position: relative; margin-top: clamp(44px, 7vh, 72px); }
@@ -246,8 +249,7 @@ html, body { margin: 0; padding: 0; background: var(--page); }
 /* ---- sections */
 #ov-home .ov-how { padding: clamp(96px, 11vw, 152px) 0; background: var(--band); }
 #ov-home .ov-kits-section { padding: clamp(96px, 11vw, 152px) 0; }
-#ov-home .ov-access { padding: clamp(104px, 12vw, 168px) 0; background: var(--band); text-align: center; }
-#ov-home .ov-access .ov-lead { margin-left: auto; margin-right: auto; }
+#ov-home .ov-access { padding: clamp(104px, 12vw, 168px) 0; background: var(--band); }
 #ov-home .ov-access .ov-btn { margin-top: 36px; }
 
 /* ---- How it works. Without JavaScript: a numbered list in four columns. */
