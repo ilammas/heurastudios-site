@@ -1,5 +1,5 @@
 // The home page's motion and interaction. All of it is an enhancement: without this file every word still shows,
-// the boxes still rise on hover (site.css), and How it works is a plain numbered list.
+// the boxes still rise on hover (site.css), the header's button is filled, and How it works is a plain numbered list.
 (function () {
   'use strict';
   var home = document.getElementById('ov-home');
@@ -17,17 +17,26 @@
   header();
   shelf();
   steps();
-  reveals();
 
-  // ---- The sticky header gets a hairline and a soft shadow once the page has scrolled.
+  // ---- The sticky header gets a hairline once the page has scrolled, and its Join waitlist fills (.is-past) once
+  // the hero's own button has gone under it, so a view never holds two filled buttons that say the same thing.
   function header() {
     var top = home.querySelector('.ov-top');
     if (!top) return;
     if (!('IntersectionObserver' in window)) {
+      top.classList.add('is-past');
       var onScroll = function () { top.classList.toggle('is-scrolled', window.scrollY > 2); };
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
       return;
+    }
+    var actions = home.querySelector('.ov-hero-actions');
+    if (actions) {
+      new IntersectionObserver(function (entries) {
+        top.classList.toggle('is-past', !entries[0].isIntersecting);
+      }, { rootMargin: '-' + Math.round(top.offsetHeight) + 'px 0px 0px 0px' }).observe(actions);
+    } else {
+      top.classList.add('is-past');
     }
     var mark = document.createElement('div');
     mark.setAttribute('aria-hidden', 'true');
@@ -38,9 +47,10 @@
     }).observe(mark);
   }
 
-  // ---- The model boxes. Hovering, keyboard focus or a held touch lifts a box off the shelf: it rises, grows a
-  // little, turns toward the pointer, a highlight follows the pointer across it, and its shadow on the shelf
-  // spreads and fades. Letting go springs it back down, with a small bounce off the shelf.
+  // ---- The model boxes. Hovering or a held touch lifts a box off the shelf: it rises, grows a little, turns toward
+  // the pointer, a highlight follows the pointer across it, and its shadow on the shelf spreads and fades. Letting
+  // go springs it back down, with a small bounce off the shelf. (The boxes aren't controls, so they don't take
+  // keyboard focus.)
   function shelf() {
     var lineup = home.querySelector('.ov-lineup');
     if (!lineup) return;
@@ -61,7 +71,7 @@
       var item = {
         slot: slot, box: box, shadow: slot.querySelector('.ov-contact'),
         lift: spring(0), rx: spring(0), ry: spring(0), mx: 35, my: 22,
-        hover: false, press: false, focus: false,
+        hover: false, press: false,
       };
       box.addEventListener('pointerenter', function (e) {
         if (e.pointerType === 'touch') return;
@@ -93,18 +103,6 @@
       };
       box.addEventListener('pointerup', letGo);
       box.addEventListener('pointercancel', letGo); // the touch became a scroll
-      box.addEventListener('focus', function () {
-        try {
-          item.focus = box.matches(':focus-visible');
-        } catch (err) {
-          item.focus = true;
-        }
-        set(item);
-      });
-      box.addEventListener('blur', function () {
-        item.focus = false;
-        set(item);
-      });
       return item;
     }
 
@@ -120,7 +118,7 @@
     }
 
     function set(item) {
-      var up = item.hover || item.press || item.focus;
+      var up = item.hover || item.press;
       if (calm()) {
         item.box.classList.toggle('is-up', up); // the shadow and a firmer edge, without moving
         return;
@@ -129,12 +127,6 @@
       if (!up) {
         item.rx.to = 0;
         item.ry.to = 0;
-      } else if (!item.hover && !item.press) {
-        // keyboard focus: a gentle default turn, lit from the top left
-        item.rx.to = 3;
-        item.ry.to = -4;
-        item.mx = 30;
-        item.my = 18;
       }
       if (!frameId) {
         last = performance.now();
@@ -201,9 +193,10 @@
   }
 
   // ---- How it works: the four steps become tabs (arrow keys, Home, End, click, or hover) that drive the preview
-  // beside them. While the preview is in view it moves on by itself, shown by a thin line filling along the
-  // selected step; the line holds while the pointer rests on the steps, and it stops for good when someone clicks
-  // a step, uses the keyboard on the steps or the preview, or presses pause.
+  // beside them. The first time the preview comes into view it plays through the four steps once, shown by a thin
+  // line filling along the selected step, and rests on the last. The line holds while the pointer rests on the
+  // steps; it stops for good when someone clicks a step, uses the keyboard on the steps or the preview, or presses
+  // pause. Play starts it over from the first step.
   function steps() {
     var how = document.getElementById('how');
     if (!how) return;
@@ -310,6 +303,7 @@
       button.hidden = calm();
       button.addEventListener('click', function () {
         playing = !playing;
+        if (playing && current === tabs.length - 1) select(0); // it had played through: from the top
         update();
       });
     }
@@ -340,7 +334,9 @@
           line = tabs[current].querySelector('.ov-step-progress span').animate(
             [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: STEP, easing: 'linear', fill: 'both' });
           line.onfinish = function () {
-            if (playing) select(current + 1);
+            if (!playing) return;
+            if (current === tabs.length - 1) stop(); // once through, then it rests on the last step
+            else select(current + 1);
           };
         }
         if (held) line.pause();
@@ -418,24 +414,5 @@
         counter = requestAnimationFrame(tick);
       }
     }
-  }
-
-  // ---- Sections below the fold rise in once as they arrive. Only when motion is welcome, and only for what
-  // isn't on screen yet, so nothing that's already showing disappears.
-  function reveals() {
-    if (calm() || !('IntersectionObserver' in window)) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        e.target.classList.add('is-in');
-        io.unobserve(e.target);
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
-    var fold = window.innerHeight * 0.92;
-    Array.prototype.forEach.call(home.querySelectorAll('main > section:not(.ov-hero) > .ov-wrap'), function (wrap) {
-      if (wrap.getBoundingClientRect().top < fold) return;
-      wrap.classList.add('ov-reveal');
-      io.observe(wrap);
-    });
   }
 })();

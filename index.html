@@ -37,7 +37,7 @@
             <path class="ov-rays" d="M12 1.75v2.1M12 20.15v2.1M1.75 12h2.1M20.15 12h2.1M4.75 4.75l1.5 1.5M17.75 17.75l1.5 1.5M4.75 19.25l1.5-1.5M17.75 6.25l1.5-1.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
           </svg>
         </button>
-        <a class="ov-btn ov-btn-primary ov-btn-small" href="/waitlist/">Join waitlist</a>
+        <a class="ov-btn ov-btn-primary ov-btn-small ov-top-cta" href="/waitlist/">Join waitlist</a>
       </div>
     </div>
   </header>
@@ -52,47 +52,49 @@
           <a class="ov-btn ov-btn-quiet" href="#how">See how it works</a>
         </div>
 
-        <!-- The models, weakest to strongest, standing on a shelf. Only Arche, the base model, is out. -->
-        <div class="ov-shelf">
-          <ul class="ov-lineup" aria-label="Heura models">
-            <li class="ov-slot" data-model="arche">
-              <span class="ov-contact" aria-hidden="true"></span>
-              <div class="ov-riser">
-                <article class="ov-box" tabindex="0" aria-label="Heura Arche, available">
-                  <span class="ov-status is-available"><span class="ov-dot" aria-hidden="true"></span>Available</span>
-                  <div class="ov-box-foot">
-                    <p class="ov-box-name"><span>Heura</span> Arche</p>
-                    <ul class="ov-box-lines"><li>2B parameters</li><li>Text and images</li><li>Runs on a laptop</li></ul>
-                  </div>
-                </article>
-              </div>
-            </li>
-            <li class="ov-slot" data-model="asteria">
-              <span class="ov-contact" aria-hidden="true"></span>
-              <div class="ov-riser">
-                <article class="ov-box" tabindex="0" aria-label="Heura Asteria, coming soon">
-                  <span class="ov-status">Coming soon</span>
-                  <div class="ov-box-foot">
-                    <p class="ov-box-name"><span>Heura</span> Asteria</p>
-                    <ul class="ov-box-lines"><li>Stronger than Arche</li></ul>
-                  </div>
-                </article>
-              </div>
-            </li>
-            <li class="ov-slot" data-model="aniketos">
-              <span class="ov-contact" aria-hidden="true"></span>
-              <div class="ov-riser">
-                <article class="ov-box" tabindex="0" aria-label="Heura Aniketos, coming soon">
-                  <span class="ov-status">Coming soon</span>
-                  <div class="ov-box-foot">
-                    <p class="ov-box-name"><span>Heura</span> Aniketos</p>
-                    <ul class="ov-box-lines"><li>Long documents</li><li>Harder questions</li></ul>
-                  </div>
-                </article>
-              </div>
-            </li>
-          </ul>
-          <div class="ov-plank" aria-hidden="true"></div>
+        <!-- The models, weakest to strongest, on a shelf in a display case. Only Arche, the base model, is out. -->
+        <div class="ov-case">
+          <div class="ov-shelf">
+            <ul class="ov-lineup" aria-label="Heura models">
+              <li class="ov-slot" data-model="arche">
+                <span class="ov-contact" aria-hidden="true"></span>
+                <div class="ov-riser">
+                  <article class="ov-box" aria-label="Heura Arche, available">
+                    <span class="ov-status is-available"><span class="ov-dot" aria-hidden="true"></span>Available</span>
+                    <div class="ov-box-foot">
+                      <p class="ov-box-name"><span>Heura</span> Arche</p>
+                      <ul class="ov-box-lines"><li>2B parameters</li><li>Text and images</li><li>Runs on a laptop</li></ul>
+                    </div>
+                  </article>
+                </div>
+              </li>
+              <li class="ov-slot" data-model="asteria">
+                <span class="ov-contact" aria-hidden="true"></span>
+                <div class="ov-riser">
+                  <article class="ov-box" aria-label="Heura Asteria, coming soon">
+                    <span class="ov-status">Coming soon</span>
+                    <div class="ov-box-foot">
+                      <p class="ov-box-name"><span>Heura</span> Asteria</p>
+                      <ul class="ov-box-lines"><li>Stronger than Arche</li></ul>
+                    </div>
+                  </article>
+                </div>
+              </li>
+              <li class="ov-slot" data-model="aniketos">
+                <span class="ov-contact" aria-hidden="true"></span>
+                <div class="ov-riser">
+                  <article class="ov-box" aria-label="Heura Aniketos, coming soon">
+                    <span class="ov-status">Coming soon</span>
+                    <div class="ov-box-foot">
+                      <p class="ov-box-name"><span>Heura</span> Aniketos</p>
+                      <ul class="ov-box-lines"><li>Long documents</li><li>Harder questions</li></ul>
+                    </div>
+                  </article>
+                </div>
+              </li>
+            </ul>
+            <div class="ov-plank" aria-hidden="true"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -186,37 +188,36 @@
     <section class="ov-kits-section" id="kits" aria-labelledby="ov-kits-title">
       <div class="ov-wrap">
         <h2 id="ov-kits-title" class="ov-h2">Starter kits</h2>
-        <p class="ov-lead">Sample documents, rules, example answers and test questions. Swap in your own anytime.</p>
+        <p class="ov-lead">Every kit comes with 3 documents, 6 rules, 10 example answers and 8 test questions. Swap in your own anytime.</p>
         <ul class="ov-kits">
           <li class="ov-kit">
-            <svg class="ov-glyph is-support" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-              <g class="ov-g-move"><path d="M8 11.5A3.5 3.5 0 0 1 11.5 8h17A3.5 3.5 0 0 1 32 11.5v11a3.5 3.5 0 0 1-3.5 3.5H18l-6.5 5.5V26H11.5A3.5 3.5 0 0 1 8 22.5z"/>
-              <circle class="ov-g-dot" cx="15" cy="17" r="1.3"/><circle class="ov-g-dot" cx="20" cy="17" r="1.3"/><circle class="ov-g-dot" cx="25" cy="17" r="1.3"/></g>
+            <svg class="ov-glyph" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path d="M8 11.5A3.5 3.5 0 0 1 11.5 8h17A3.5 3.5 0 0 1 32 11.5v11a3.5 3.5 0 0 1-3.5 3.5H18l-6.5 5.5V26H11.5A3.5 3.5 0 0 1 8 22.5z"/>
+              <circle class="ov-g-dot" cx="15" cy="17" r="1.3"/><circle class="ov-g-dot" cx="20" cy="17" r="1.3"/><circle class="ov-g-dot" cx="25" cy="17" r="1.3"/>
             </svg>
-            <h3>Customer support</h3>
-            <p>Refunds, shipping and warranty</p>
+            <h3 id="ov-kit-support">Customer support</h3>
+            <ul class="ov-kit-docs" aria-labelledby="ov-kit-support"><li>Refund Policy</li><li>Shipping FAQ</li><li>Warranty</li></ul>
           </li>
           <li class="ov-kit">
-            <svg class="ov-glyph is-hr" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-              <rect x="8" y="10" width="24" height="22" rx="3.5"/><path d="M8 16.5h24M14 7.5v5M26 7.5v5"/>
-              <path class="ov-g-check" d="M15.5 24.2l3.2 3.1 6.2-6.4" pathLength="1"/>
+            <svg class="ov-glyph" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <rect x="8" y="10" width="24" height="22" rx="3.5"/><path d="M8 16.5h24M14 7.5v5M26 7.5v5M15.5 24.2l3.2 3.1 6.2-6.4"/>
             </svg>
-            <h3>HR policy</h3>
-            <p>Time off, benefits and remote work</p>
+            <h3 id="ov-kit-hr">HR policy</h3>
+            <ul class="ov-kit-docs" aria-labelledby="ov-kit-hr"><li>Time Off Policy</li><li>Benefits Guide</li><li>Remote Work Policy</li></ul>
           </li>
           <li class="ov-kit">
-            <svg class="ov-glyph is-it" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-              <g class="ov-g-move"><circle cx="14" cy="20" r="6"/><circle cx="14" cy="20" r="1.6"/><path d="M20 20h13M28 20v4.5M32.5 20v3"/></g>
+            <svg class="ov-glyph" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <circle cx="14" cy="20" r="6"/><circle cx="14" cy="20" r="1.6"/><path d="M20 20h13M28 20v4.5M32.5 20v3"/>
             </svg>
-            <h3>IT helpdesk</h3>
-            <p>Passwords, VPN and laptops</p>
+            <h3 id="ov-kit-it">IT helpdesk</h3>
+            <ul class="ov-kit-docs" aria-labelledby="ov-kit-it"><li>Passwords and MFA</li><li>VPN Guide</li><li>Laptop Requests</li></ul>
           </li>
           <li class="ov-kit">
-            <svg class="ov-glyph is-sales" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-              <g class="ov-g-move"><path d="M21.6 7H31a2 2 0 0 1 2 2v9.4a2 2 0 0 1-.6 1.4L19.8 32.4a2 2 0 0 1-2.8 0l-9.4-9.4a2 2 0 0 1 0-2.8L20.2 7.6a2 2 0 0 1 1.4-.6z"/><circle cx="27" cy="13" r="2"/></g>
+            <svg class="ov-glyph" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <path d="M21.6 7H31a2 2 0 0 1 2 2v9.4a2 2 0 0 1-.6 1.4L19.8 32.4a2 2 0 0 1-2.8 0l-9.4-9.4a2 2 0 0 1 0-2.8L20.2 7.6a2 2 0 0 1 1.4-.6z"/><circle cx="27" cy="13" r="2"/>
             </svg>
-            <h3>Sales</h3>
-            <p>Products, pricing and objections</p>
+            <h3 id="ov-kit-sales">Sales</h3>
+            <ul class="ov-kit-docs" aria-labelledby="ov-kit-sales"><li>Product Sheet</li><li>Pricing</li><li>Objection Handling</li></ul>
           </li>
         </ul>
       </div>
@@ -225,7 +226,7 @@
     <section class="ov-access" aria-labelledby="ov-access-title">
       <div class="ov-wrap">
         <h2 id="ov-access-title" class="ov-h2">Be first in line for the beta</h2>
-        <p class="ov-lead">Join the waitlist and we'll email you when the Heura Studio beta opens.</p>
+        <p class="ov-lead">Get an email when the Heura Studio beta opens.</p>
         <a class="ov-btn ov-btn-primary" href="/waitlist/">Join waitlist</a>
       </div>
     </section>

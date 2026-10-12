@@ -1,7 +1,9 @@
 // The light/dark switch in the header, on every page. The inline script in each page's <head> has already set
 // html[data-theme] from the saved choice (localStorage "ov-theme": "light" or "dark") or the system setting,
 // before anything painted. This file makes the switch work, keeps its name saying what it will do, follows the
-// system until someone picks, and picks up a choice made in another tab.
+// system until someone picks, and picks up a choice made in another tab. Switching back to what the system shows
+// forgets the choice, so the page follows the system's own setting again (Apple's dark mode guidance: a site that
+// ignores the system appearance looks broken).
 (function () {
   'use strict';
   var root = document.documentElement;
@@ -21,7 +23,8 @@
 
   function save(value) {
     try {
-      window.localStorage.setItem(KEY, value);
+      if (value) window.localStorage.setItem(KEY, value);
+      else window.localStorage.removeItem(KEY);
     } catch (e) {
       // private mode or blocked storage: the switch still works for this page
     }
@@ -58,7 +61,7 @@
   for (var i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', function () {
       var next = current() === 'dark' ? 'light' : 'dark';
-      save(next);
+      save(next === system() ? null : next); // the system's own look needs no saved choice
       apply(next, true);
     });
   }
