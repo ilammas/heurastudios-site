@@ -1,597 +1,375 @@
-/* ostravanne.com: the tokens, base and header both pages share, then the home page.
-   Every color is a token, light by default, dark under html[data-theme="dark"] (set before first paint by the
-   inline script in <head>) or, with JavaScript off, under the system's dark setting.
-   Tokens are registered so that a theme switch cross-fades every color, gradients included. */
+/* heurastudios.com: one stylesheet for both pages.
+   Type: Newsreader (a serif) for headlines and lead paragraphs, Archivo for everything else.
+   Color: black ink on a white page, one grey for panels, and the Heura orange only in the logo and on Arche's status.
+   Every color is a token, light by default, dark under html[data-theme="dark"] (set before the first paint by the
+   inline script in each page's <head>) or, with JavaScript off, under the system's dark setting. The tokens are
+   registered so that changing the appearance cross-fades every color. */
 
 @property --page { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
-@property --band { syntax: '<color>'; inherits: true; initial-value: #f5f5f7; }
-@property --surface { syntax: '<color>'; inherits: true; initial-value: #ffffff; }
-@property --hairline { syntax: '<color>'; inherits: true; initial-value: #d1d1d6; }
-@property --edge { syntax: '<color>'; inherits: true; initial-value: #b9b9bf; }
-@property --text { syntax: '<color>'; inherits: true; initial-value: #000000; }
-@property --text-2 { syntax: '<color>'; inherits: true; initial-value: #55555b; }
+@property --panel { syntax: '<color>'; inherits: true; initial-value: #f3f3f3; }
+@property --ink { syntax: '<color>'; inherits: true; initial-value: #000000; }
+@property --ink-2 { syntax: '<color>'; inherits: true; initial-value: #5f5f5f; }
+@property --line { syntax: '<color>'; inherits: true; initial-value: #e4e4e4; }
+@property --rule { syntax: '<color>'; inherits: true; initial-value: #d6d6d6; }
+@property --ring { syntax: '<color>'; inherits: true; initial-value: #dcdcdc; }
+@property --edge { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --field { syntax: '<color>'; inherits: true; initial-value: #8a8a8a; }
 @property --accent { syntax: '<color>'; inherits: true; initial-value: #ff4f00; }
-@property --field { syntax: '<color>'; inherits: true; initial-value: #86868b; }
-@property --wash { syntax: '<percentage>'; inherits: true; initial-value: 13%; }
-@property --wash-soon { syntax: '<percentage>'; inherits: true; initial-value: 9%; }
-@property --glow { syntax: '<percentage>'; inherits: true; initial-value: 9%; }
-@property --lift { syntax: '<number>'; inherits: true; initial-value: 0; } /* how far a box is off its shelf, 0 to 1 */
+@property --foot-edge { syntax: '<color>'; inherits: true; initial-value: #000000; }
 
 :root {
   --page: #ffffff;
-  --band: #f5f5f7; /* alternate sections */
-  --surface: #ffffff; /* boxes, cards, inputs; always with an edge */
-  --hairline: #d1d1d6; /* separators between rows and sections */
-  --edge: #b9b9bf; /* the outline of a box, a card, a chip or a quiet button */
-  --text: #000000;
-  --text-2: #55555b; /* secondary copy: 7.4:1 on page, 6.8:1 on band (dark: #b1b1b7, 9.8:1 on page, 7.9:1 on surface) */
-  --accent: #ff4f00; /* Heura orange: small marks only */
-  --field: #86868b; /* input borders: 3.6:1, so a field reads as a field */
-  --arche: #ff4f00;
-  --asteria: #5b7cfa;
-  --aniketos: #7a5af8;
-  --wash: 100%; /* the cap along the top of a model's box: its tint, full strength */
-  --wash-soon: 55%; /* quieter, for the ones still coming */
-  --glow: 9%; /* the highlight that follows the pointer */
-  --shade: rgba(0, 0, 0, .28); /* contact shadows on a shelf */
-  --lifted: 0 1px 1px rgba(0, 0, 0, .1), 0 6px 12px -4px rgba(0, 0, 0, .14), 0 20px 34px -14px rgba(0, 0, 0, .24);
-  --raised: 0 1px 1px rgba(0, 0, 0, .08), 0 8px 18px -8px rgba(0, 0, 0, .18);
-  --ease: cubic-bezier(.2, .8, .2, 1);
+  --panel: #f3f3f3;   /* panels behind pictures and models: 1.11:1 on the page */
+  --ink: #000000;
+  --ink-2: #5f5f5f;   /* secondary text: 6.4:1 on the page, 5.8:1 on a panel */
+  --line: #e4e4e4;    /* rules between rows on the page */
+  --rule: #d6d6d6;    /* rules drawn on a panel */
+  --ring: #dcdcdc;    /* the edge of a screenshot */
+  --edge: transparent; /* a panel's outline: only with Increase Contrast */
+  --field: #8a8a8a;   /* input borders: 3.4:1 */
+  --accent: #ff4f00;  /* Heura orange */
+  --foot-edge: #000000; /* the footer's top edge: in light it's the footer itself */
+  --sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --gutter: clamp(20px, 4vw, 48px);
+  --header: 64px;
   color-scheme: light;
 }
-/* dark: the bands (#161617) and the surfaces on them (#1d1d1f) stand apart from the black page, so sections
-   still group the way they do in light */
+/* dark: panels #161616 stand apart from the black page (1.16:1); secondary text 8.3:1 */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --page: #000000; --band: #161617; --surface: #1d1d1f; --hairline: #2c2c2e; --edge: #48484c;
-    --text: #fafafa; --text-2: #b1b1b7; --accent: #ff6a26; --field: #6e6e73;
-    --wash: 100%; --wash-soon: 60%; --glow: 9%; --shade: rgba(0, 0, 0, .9);
-    --lifted: 0 1px 1px rgba(0, 0, 0, .7), 0 8px 14px -4px rgba(0, 0, 0, .75), 0 22px 40px -14px rgba(0, 0, 0, .85);
-    --raised: 0 1px 1px rgba(0, 0, 0, .6), 0 10px 22px -8px rgba(0, 0, 0, .75);
+    --page: #000000; --panel: #161616; --ink: #f5f5f5; --ink-2: #a3a3a3; --line: #262626; --rule: #303030;
+    --ring: #2c2c2c; --field: #6e6e6e; --accent: #ff6a26; --foot-edge: #262626;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --page: #000000; --band: #161617; --surface: #1d1d1f; --hairline: #2c2c2e; --edge: #48484c;
-  --text: #fafafa; --text-2: #b1b1b7; --accent: #ff6a26; --field: #6e6e73;
-  --wash: 100%; --wash-soon: 60%; --glow: 9%; --shade: rgba(0, 0, 0, .9);
-  --lifted: 0 1px 1px rgba(0, 0, 0, .7), 0 8px 14px -4px rgba(0, 0, 0, .75), 0 22px 40px -14px rgba(0, 0, 0, .85);
-  --raised: 0 1px 1px rgba(0, 0, 0, .6), 0 10px 22px -8px rgba(0, 0, 0, .75);
+  --page: #000000; --panel: #161616; --ink: #f5f5f5; --ink-2: #a3a3a3; --line: #262626; --rule: #303030;
+  --ring: #2c2c2c; --field: #6e6e6e; --accent: #ff6a26; --foot-edge: #262626;
   color-scheme: dark;
 }
-/* Increase Contrast: stronger secondary text, separators and outlines in both appearances (Apple's color guidance:
-   give every custom color an increased contrast option). Light: secondary 11.4:1, box edges 4.7:1 on the band.
-   Dark: secondary 13.8:1, box edges 6.5:1. */
+/* Increase Contrast: stronger secondary text and rules, and panels get an outline.
+   Light: secondary 12.6:1, outlines 4.5:1. Dark: secondary 14.4:1, outlines 6.5:1. */
 @media (prefers-contrast: more) {
-  :root { --text-2: #3a3a3c; --hairline: #8e8e93; --edge: #6e6e73; --field: #6e6e73; }
-  :root[data-theme="dark"] { --text-2: #d1d1d6; --hairline: #6e6e73; --edge: #a1a1a6; --field: #a1a1a6; }
+  :root { --ink-2: #333333; --line: #8a8a8a; --rule: #8a8a8a; --ring: #767676; --edge: #767676; --field: #5f5f5f; }
+  :root[data-theme="dark"] { --ink-2: #d6d6d6; --line: #7a7a7a; --rule: #7a7a7a; --ring: #8f8f8f; --edge: #8f8f8f; --field: #a3a3a3; --foot-edge: #7a7a7a; }
 }
 @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --text-2: #d1d1d6; --hairline: #6e6e73; --edge: #a1a1a6; --field: #a1a1a6; }
+  :root:not([data-theme="light"]) { --ink-2: #d6d6d6; --line: #7a7a7a; --rule: #7a7a7a; --ring: #8f8f8f; --edge: #8f8f8f; --field: #a3a3a3; --foot-edge: #7a7a7a; }
 }
-/* the switch adds this class for a moment, so only a switch cross-fades (never the first paint) */
+/* site.js adds this class for a moment when the appearance changes, so only a change cross-fades */
 :root.ov-theming {
-  transition: --page .25s ease, --band .25s ease, --surface .25s ease, --hairline .25s ease, --edge .25s ease, --text .25s ease,
-    --text-2 .25s ease, --accent .25s ease, --field .25s ease, --wash .25s ease, --wash-soon .25s ease, --glow .25s ease;
+  transition: --page .25s ease, --panel .25s ease, --ink .25s ease, --ink-2 .25s ease, --line .25s ease, --rule .25s ease,
+    --ring .25s ease, --edge .25s ease, --field .25s ease, --accent .25s ease, --foot-edge .25s ease;
 }
 
-html, body { margin: 0; padding: 0; background: var(--page); }
+/* ---- base */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--page); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-
-#ov-home {
-  display: block; min-height: 100vh; background: var(--page); color: var(--text);
-  font-family: "Archivo", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 17px; line-height: 1.5; font-weight: 420; font-stretch: 100%; letter-spacing: -.005em;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+body {
+  display: flex; flex-direction: column; min-height: 100vh; margin: 0;
+  background: var(--page); color: var(--ink);
+  font-family: var(--sans); font-size: 16px; line-height: 1.55; font-weight: 400; letter-spacing: -.003em;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
 }
-#ov-home *, #ov-home *::before, #ov-home *::after { box-sizing: border-box; }
-#ov-home h1, #ov-home h2, #ov-home h3, #ov-home p, #ov-home ul, #ov-home ol, #ov-home li { margin: 0; padding: 0; }
-#ov-home ul, #ov-home ol { list-style: none; }
-#ov-home a { color: inherit; text-decoration: none; }
-#ov-home button { font: inherit; color: inherit; }
-#ov-home [hidden] { display: none !important; }
-#ov-home :focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-#ov-home .ov-wrap { width: 100%; max-width: 1168px; margin: 0 auto; padding: 0 24px; }
+main { flex: 1 0 auto; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+h1, h2, h3 { font-size: inherit; font-weight: inherit; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+button, input { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+::selection { background: var(--ink); color: var(--page); }
+.ov-wrap { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
 
-/* type */
-#ov-home .ov-hero-title,
-#ov-home .ov-h2 { font-weight: 720; font-stretch: 100%; letter-spacing: -.034em; line-height: 1.02; text-wrap: balance; }
-#ov-home .ov-h2 { font-size: clamp(36px, 2.4vw + 22px, 56px); }
-#ov-home .ov-lead { margin-top: 18px; max-width: 34em; font-size: 21px; line-height: 1.45; color: var(--text-2); text-wrap: pretty; }
+/* a picture made in each appearance: only the one that matches shows */
+.ov-for-dark { display: none; }
+:root[data-theme="dark"] .ov-for-light { display: none; }
+:root[data-theme="dark"] .ov-for-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .ov-for-light { display: none; }
+  :root:not([data-theme]) .ov-for-dark { display: block; }
+}
 
-/* ---- buttons: 10px corners; the primary is filled with the text color */
-#ov-home .ov-btn {
-  display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px;
-  border: 1px solid transparent; border-radius: 10px; cursor: pointer;
-  font-size: 16px; font-weight: 600; line-height: 1; letter-spacing: -.01em; white-space: nowrap;
-  transition: background-color .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .3s var(--ease);
+/* ---- type */
+.ov-display {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 4.6vw + 18px, 80px);
+  line-height: 1.02; letter-spacing: -.022em; text-wrap: balance;
+}
+.ov-h2 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 2.4vw + 20px, 56px);
+  line-height: 1.05; letter-spacing: -.018em; text-wrap: balance;
+}
+.ov-lead,
+.ov-section-lead {
+  max-width: 28em; font-family: var(--serif); font-size: clamp(19px, .45vw + 15.5px, 22px);
+  line-height: 1.42; color: var(--ink-2); text-wrap: pretty;
+}
+.ov-section-lead { margin-top: 16px; max-width: 30em; }
+
+/* ---- buttons: pills; the primary is filled with the ink */
+.ov-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 24px; border: 0; border-radius: 999px; cursor: pointer;
+  font-family: var(--sans); font-size: 16px; font-weight: 500; line-height: 1; letter-spacing: -.005em; white-space: nowrap;
+  transition: background-color .15s ease, color .15s ease;
   -webkit-tap-highlight-color: transparent;
 }
-#ov-home .ov-btn-primary { background: var(--text); color: var(--page); }
-#ov-home .ov-btn-quiet { border-color: var(--edge); color: var(--text); }
+.ov-btn-primary { background: var(--ink); color: var(--page); }
+.ov-btn-quiet { background: var(--panel); color: var(--ink); box-shadow: inset 0 0 0 1px var(--edge); }
 @media (hover: hover) {
-  #ov-home .ov-btn-primary:hover { background: color-mix(in srgb, var(--text) 80%, var(--page)); }
-  #ov-home .ov-btn-quiet:hover { border-color: var(--text); }
+  .ov-btn-primary:hover { background: color-mix(in srgb, var(--ink) 80%, var(--page)); }
+  .ov-btn-quiet:hover { background: color-mix(in srgb, var(--panel) 90%, var(--ink)); }
 }
-#ov-home .ov-btn:active { transform: scale(.97); }
-#ov-home .ov-btn-small { min-height: 44px; padding: 0 18px; font-size: 15px; }
-#ov-home .ov-short { display: none; }
+.ov-btn-small { min-height: 40px; padding: 0 18px; font-size: 15px; }
+.ov-btn-small::before { content: ""; position: absolute; inset: -2px 0; } /* 44px to tap */
 
-/* ---- header: sticky; a hairline and a soft shadow appear once the page scrolls */
-#ov-home .ov-top {
-  position: sticky; top: 0; z-index: 50;
-  background: color-mix(in srgb, var(--page) 84%, transparent);
-  -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid transparent;
-  transition: border-color .3s var(--ease);
+/* ---- header: solid; a rule appears once the page scrolls */
+.ov-top {
+  position: sticky; top: 0; z-index: 10; background: var(--page);
+  border-bottom: 1px solid transparent; transition: border-color .2s ease;
 }
-#ov-home .ov-top.is-scrolled { border-bottom-color: var(--hairline); }
-/* One filled button per view: the header's Join waitlist is outlined while the hero's own is on screen, and fills
-   once that has scrolled away (home.js sets .is-past). Without JavaScript it's always filled. */
-.ov-js #ov-home .ov-top:not(.is-past) .ov-top-cta { border-color: var(--edge); background: transparent; color: var(--text); }
-@media (hover: hover) { .ov-js #ov-home .ov-top:not(.is-past) .ov-top-cta:hover { border-color: var(--text); } }
-#ov-home .ov-top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
-#ov-home .ov-top-actions { display: flex; align-items: center; gap: 6px; }
-#ov-home .ov-logo {
+.ov-top.is-scrolled { border-bottom-color: var(--line); }
+.ov-top-row { display: flex; align-items: center; gap: 24px; min-height: var(--header); }
+.ov-logo {
   display: inline-flex; align-items: center; gap: 10px; min-height: 44px; white-space: nowrap;
-  font-size: 18px; font-weight: 700; font-stretch: 100%; letter-spacing: -.03em; line-height: 1;
+  font-size: 17px; font-weight: 600; letter-spacing: -.015em; line-height: 1;
 }
-#ov-home .ov-mark { position: relative; flex: none; width: 26px; height: 26px; border-radius: 5px; background: var(--text); overflow: hidden; }
-#ov-home .ov-mark::after { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 8px; background: var(--accent); }
-
-/* the theme switch: a moon in light mode, a sun in dark (what it switches to). It needs JavaScript. */
-#ov-home .ov-theme {
-  display: none; place-items: center; flex: none; width: 44px; height: 44px; margin: 0; padding: 0;
-  border: 0; border-radius: 10px; background: transparent; color: var(--text); cursor: pointer;
-  transition: background-color .25s var(--ease), transform .3s var(--ease); -webkit-tap-highlight-color: transparent;
+.ov-mark { position: relative; flex: none; width: 24px; height: 24px; border-radius: 6px; background: var(--ink); overflow: hidden; }
+.ov-mark::after { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 8px; background: var(--accent); }
+.ov-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.ov-nav a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px;
+  font-size: 15px; color: var(--ink-2); transition: color .15s ease;
 }
-.ov-js #ov-home .ov-theme { display: inline-grid; }
-@media (hover: hover) { #ov-home .ov-theme:hover { background: var(--band); } }
-#ov-home .ov-theme:active { transform: scale(.9); }
-#ov-home .ov-theme svg { width: 21px; height: 21px; overflow: visible; }
-#ov-home .ov-orb, #ov-home .ov-rays, #ov-home .ov-bite {
-  transform-box: fill-box; transform-origin: center;
-  transition: transform .5s var(--ease), opacity .3s var(--ease);
-}
-#ov-home .ov-rays { opacity: 0; transform: rotate(-60deg) scale(.5); }
-[data-theme="dark"] #ov-home .ov-orb { transform: scale(.55); }
-[data-theme="dark"] #ov-home .ov-bite { transform: translate(9px, -9px); }
-[data-theme="dark"] #ov-home .ov-rays { opacity: 1; transform: none; }
-
-/* ---- hero */
-/* The hero reads from the page's left edge, the same edge as every section heading and the case below it. The
-   headline's second sentence takes its own line; where the first doesn't fit on one, its lines are balanced. */
-#ov-home .ov-hero { padding: clamp(36px, 6vh, 72px) 0 clamp(80px, 10vh, 112px); }
-#ov-home .ov-hero-title { margin: 0; font-size: clamp(44px, 3.6vw + 26px, 80px); line-height: 1; }
-#ov-home .ov-hero-line { display: block; }
-#ov-home .ov-hero-sub { max-width: 31em; margin: 24px 0 0; font-size: 21px; line-height: 1.45; color: var(--text-2); text-wrap: pretty; }
-#ov-home .ov-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-
-/* ---- the shelf and the model boxes on it */
-#ov-home .ov-shelf { position: relative; margin-top: clamp(44px, 7vh, 72px); }
-/* the home page's shelf stands in a display case: a band-colored stage, the shelf running wall to wall, the same
-   object the waitlist page shows */
-#ov-home .ov-case {
-  --case-x: clamp(16px, 4vw, 48px);
-  position: relative; margin-top: clamp(36px, 5vh, 56px); padding: clamp(24px, 3.5vh, 40px) var(--case-x) 0;
-  border: 1px solid var(--hairline); border-radius: 12px; background: var(--band);
-  overflow: hidden; overflow: clip;
-}
-#ov-home .ov-case .ov-shelf { margin-top: 0; }
-/* the shelf is the case's front ledge: its top edge, then its face down to the case's own bottom edge */
-#ov-home .ov-case .ov-plank {
-  height: clamp(18px, 2.4vh, 24px); margin: 0 calc(-1 * var(--case-x)); border-bottom: 0; background: var(--surface);
+@media (hover: hover) { .ov-nav a:hover { color: var(--ink); } }
+.ov-top-row > .ov-btn { flex: none; }
+@media (max-width: 759px) {
+  .ov-nav { display: none; }
+  .ov-top-row > .ov-btn { margin-left: auto; }
 }
 
-#ov-home .ov-lineup { position: relative; z-index: 1; display: flex; justify-content: center; align-items: flex-end; gap: 28px; }
-#ov-home .ov-slot { position: relative; flex: 0 1 228px; min-width: 0; }
-#ov-home .ov-riser { position: relative; z-index: 1; }
-#ov-home .ov-contact {
-  position: absolute; z-index: 0; left: 9%; right: 9%; bottom: -4px; height: 8px; border-radius: 50%;
-  background: radial-gradient(closest-side, var(--shade), transparent); pointer-events: none;
-}
-/* the shelf: a firm top edge the boxes stand on, a flat front face, a hairline under it, square ends */
-#ov-home .ov-plank,
-#ov-home .ov-mini-plank {
-  border-top: 1px solid var(--edge);
-  border-bottom: 1px solid var(--hairline);
-  background: var(--band);
-}
-#ov-home .ov-plank { position: relative; z-index: 0; height: 10px; }
-/* a model's box: flat, a crisp edge, and a cap in the model's own tint along its top */
-#ov-home .ov-box {
-  --tint: var(--arche); --w: var(--wash); --h: clamp(216px, 25vh, 252px); --lift: 0;
-  position: relative; display: flex; flex-direction: column; justify-content: space-between; height: var(--h);
-  padding: 20px 20px 22px; text-align: left; cursor: default;
-  border: 1px solid color-mix(in srgb, var(--edge), var(--text) calc(var(--lift) * 30%));
-  border-radius: 12px 12px 3px 3px;
-  background: var(--surface);
-  box-shadow: inset 0 3px 0 color-mix(in srgb, var(--tint) var(--w), var(--surface));
-  transform-origin: 50% 85%; -webkit-tap-highlight-color: transparent; outline-offset: 4px;
-}
-/* the highlight that follows the pointer, under the words */
-#ov-home .ov-box::before {
-  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: var(--lift);
-  background: radial-gradient(280px circle at var(--mx, 35%) var(--my, 22%), color-mix(in srgb, var(--tint) var(--glow), transparent), transparent 72%);
-}
-/* the box's own shadow, which only exists while it's off the shelf */
-#ov-home .ov-box::after {
-  content: ""; position: absolute; z-index: -1; inset: 0; border-radius: inherit; pointer-events: none;
-  box-shadow: var(--lifted); opacity: var(--lift);
-}
-#ov-home .ov-box > * { position: relative; }
-#ov-home .ov-slot[data-model="asteria"] .ov-box { --tint: var(--asteria); --w: var(--wash-soon); --h: clamp(254px, 29.5vh, 296px); }
-#ov-home .ov-slot[data-model="aniketos"] .ov-box { --tint: var(--aniketos); --w: var(--wash-soon); --h: clamp(292px, 34vh, 340px); }
+/* ---- panels: the grey behind a picture or a model */
+.ov-panel { border: 1px solid var(--edge); border-radius: clamp(16px, 1.8vw, 24px); background: var(--panel); }
 
-/* "Available" is filled, "Coming soon" only outlined */
-#ov-home .ov-status {
-  align-self: flex-start; display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 9px;
-  border: 1px solid var(--edge); border-radius: 6px; background: var(--surface); color: var(--text-2);
-  font-size: 13px; font-weight: 600; line-height: 1; white-space: nowrap;
+/* a screenshot standing in a panel, cut off by the panel's bottom edge */
+.ov-shot { overflow: hidden; padding: clamp(20px, 4.4vw, 64px) clamp(20px, 4.4vw, 64px) 0; }
+.ov-shot-img { display: block; }
+.ov-shot img {
+  width: 100%; border-radius: clamp(6px, .8vw, 10px) clamp(6px, .8vw, 10px) 0 0;
+  box-shadow: 0 0 0 1px var(--ring); background: var(--page);
 }
-#ov-home .ov-status.is-available { border-color: var(--text); background: var(--text); color: var(--page); }
-#ov-home .ov-dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-#ov-home .ov-box-name { font-size: 32px; font-weight: 720; font-stretch: 100%; letter-spacing: -.034em; line-height: 1.02; }
-#ov-home .ov-box-name span { display: block; margin-bottom: 3px; font-size: 15px; font-weight: 520; font-stretch: 100%; letter-spacing: -.01em; color: var(--text-2); }
-#ov-home .ov-box-lines { margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--hairline); }
-#ov-home .ov-box-lines li { font-size: 15px; line-height: 1.45; color: var(--text-2); }
 
-/* Without home.js the boxes still rise on hover (home.js adds the tilt, the spring and a held touch). */
-#ov-home .ov-lineup:not(.is-live) .ov-box { transition: transform .45s var(--ease), --lift .45s var(--ease); }
-@media (hover: hover) {
-  #ov-home .ov-lineup:not(.is-live) .ov-box:hover { --lift: 1; transform: translateY(-14px) scale(1.03); }
+/* ---- hero: the headline on the page's left edge, the lead and the buttons beside it, then Heura Studio itself */
+.ov-hero { padding-top: clamp(40px, 7vw, 104px); }
+.ov-intro {
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  column-gap: clamp(32px, 5vw, 80px); align-items: end;
 }
-/* reduced motion: lifted means the shadow and the stronger edge, without moving */
-#ov-home .ov-box.is-up { --lift: 1; }
-/* on a phone a box lifts while pressed; a long press shouldn't start selecting text instead */
-@media (pointer: coarse) { #ov-home .ov-box { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; } }
+.ov-line { display: inline-block; }
+.ov-hero-line { display: block; }
+.ov-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.ov-hero .ov-shot { margin-top: clamp(40px, 6vw, 80px); }
+/* on a phone, the screen at a size that can be read: its top-left corner, running off the panel's right edge */
+@media (max-width: 559px) { .ov-hero .ov-shot-img { width: 180%; } }
+@media (max-width: 999px) {
+  .ov-intro { grid-template-columns: minmax(0, 1fr); }
+  .ov-intro-side { margin-top: 20px; }
+}
 
 /* ---- sections */
-#ov-home .ov-how { padding: clamp(96px, 11vw, 152px) 0; background: var(--band); }
-#ov-home .ov-kits-section { padding: clamp(96px, 11vw, 152px) 0; }
-#ov-home .ov-access { padding: clamp(104px, 12vw, 168px) 0; background: var(--band); }
-#ov-home .ov-access .ov-btn { margin-top: 36px; }
+.ov-section { margin-top: clamp(96px, 11vw, 168px); scroll-margin-top: calc(var(--header) + 32px); }
+.ov-head { max-width: 760px; }
+.ov-head + * { margin-top: clamp(40px, 5vw, 64px); }
 
-/* ---- How it works. Without JavaScript: a numbered list in four columns. */
-#ov-home .ov-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 48px; }
-#ov-home .ov-step {
-  position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr); align-content: start;
-  padding-top: 20px; border-top: 1px solid var(--hairline);
+/* ---- models: Arche, the one that's out, large; the two still coming beside it */
+.ov-models { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; }
+.ov-model { display: flex; flex-direction: column; min-height: 260px; padding: clamp(24px, 2.8vw, 40px); }
+.ov-model-main { grid-row: span 2; min-height: clamp(440px, 44vw, 600px); }
+.ov-status { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; line-height: 1.3; color: var(--ink-2); }
+.ov-status.is-available { color: var(--ink); }
+.ov-dot { position: relative; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.ov-dot::after { content: ""; position: absolute; inset: -5px; border: 1.5px solid var(--accent); border-radius: 50%; opacity: 0; pointer-events: none; }
+.ov-model-name {
+  margin-top: auto; padding-top: 40px; font-family: var(--serif); font-weight: 400;
+  font-size: clamp(28px, 1vw + 20px, 36px); line-height: 1.05; letter-spacing: -.015em;
 }
-#ov-home .ov-step-n { grid-column: 1; grid-row: 1; padding-top: 4px; font-size: 15px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
-#ov-home .ov-step-title { grid-column: 2; grid-row: 1; font-size: 24px; font-weight: 700; font-stretch: 100%; letter-spacing: -.03em; line-height: 1.2; transition: color .3s var(--ease); }
-#ov-home .ov-step-text { grid-column: 2; margin-top: 6px; color: var(--text-2); text-wrap: pretty; }
-#ov-home .ov-step-progress { display: none; }
-#ov-home .ov-stage { display: none; }
-
-/* With JavaScript: the steps on the left drive a preview on the right. */
-.ov-js #ov-home .ov-how-body {
-  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(36px, 5.5vw, 80px); margin-top: 56px;
+.ov-model-main .ov-model-name { font-size: clamp(44px, 4vw + 20px, 80px); letter-spacing: -.024em; }
+.ov-model-text { margin-top: 10px; max-width: 26em; font-size: 16px; line-height: 1.5; color: var(--ink-2); }
+.ov-model-main .ov-model-text { margin-top: 14px; font-size: 17px; }
+.ov-specs { margin-top: 28px; border-top: 1px solid var(--rule); }
+.ov-specs div { display: flex; justify-content: space-between; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--rule); font-size: 15px; line-height: 1.4; }
+.ov-specs dt { color: var(--ink-2); }
+.ov-specs dd { text-align: right; }
+@media (max-width: 899px) {
+  .ov-models { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ov-model-main { grid-column: 1 / -1; grid-row: auto; min-height: 0; }
 }
-.ov-js #ov-home .ov-steps { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 0; }
-.ov-js #ov-home .ov-step { padding: 22px 0 24px; cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 2px; }
-.ov-js #ov-home .ov-step:last-child { border-bottom: 1px solid var(--hairline); }
-.ov-js #ov-home .ov-step[aria-selected="false"] .ov-step-title { color: var(--text-2); }
-@media (hover: hover) { .ov-js #ov-home .ov-step[aria-selected="false"]:hover .ov-step-title { color: var(--text); } }
-/* a thin line along the selected step's top edge; while the steps play, home.js fills it from the left */
-.ov-js #ov-home .ov-step-progress { display: block; position: absolute; left: 0; right: 0; top: -1px; height: 2px; overflow: hidden; }
-.ov-js #ov-home .ov-step-progress span { position: absolute; inset: 0; background: var(--text); transform: scaleX(0); transform-origin: 0 50%; }
-.ov-js #ov-home .ov-step[aria-selected="true"] .ov-step-progress span { transform: none; }
-
-/* overflow: clip, not hidden: a hidden box can still be scrolled by focus or find-in-page, which would knock the
-   drawing out of place */
-.ov-js #ov-home .ov-stage {
-  position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; overflow: clip; container-type: inline-size;
-  border: 1px solid var(--edge); border-radius: 12px; background: var(--surface);
-}
-#ov-home .ov-scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .3s var(--ease), visibility 0s linear .3s; }
-#ov-home .ov-scene.is-active { opacity: 1; visibility: visible; transition: opacity .45s var(--ease) .08s, visibility 0s; }
-#ov-home .ov-scene:focus-visible { outline-offset: -4px; border-radius: 12px; }
-#ov-home .ov-art { position: absolute; inset: 0; }
-#ov-home .ov-play {
-  position: absolute; z-index: 2; right: 14px; bottom: 14px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
-  border: 1px solid var(--edge); border-radius: 10px; color: var(--text-2); cursor: pointer;
-  background: color-mix(in srgb, var(--surface) 80%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  transition: color .25s var(--ease), border-color .25s var(--ease), transform .3s var(--ease);
-}
-@media (hover: hover) { #ov-home .ov-play:hover { color: var(--text); border-color: var(--text); } }
-#ov-home .ov-play:active { transform: scale(.92); }
-#ov-home .ov-play svg { width: 18px; height: 18px; }
-#ov-home .ov-play-pause { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
-#ov-home .ov-play-play { fill: currentColor; display: none; }
-#ov-home .ov-play[data-state="stopped"] .ov-play-pause { display: none; }
-#ov-home .ov-play[data-state="stopped"] .ov-play-play { display: block; }
-
-/* The drawings. Sizes are in cqw (a hundredth of the preview's width), so each one scales as a whole.
-   Base styles are each drawing's last frame; the animations play from the first frame to it. */
-#ov-home .ov-mini-plank { position: absolute; left: 8cqw; right: 8cqw; top: 54cqw; height: 1.8cqw; }
-#ov-home .ov-minis { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 54cqw; display: flex; justify-content: center; align-items: flex-end; gap: 4.5cqw; }
-#ov-home .ov-mini { position: relative; width: 21cqw; height: 24cqw; }
-#ov-home .ov-mini.is-asteria { height: 29cqw; }
-#ov-home .ov-mini.is-aniketos { height: 34cqw; }
-#ov-home .ov-mini-face {
-  --tint: var(--arche); --w: var(--wash);
-  position: relative; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 1.8cqw;
-  border-radius: 1.5cqw 1.5cqw .4cqw .4cqw;
-}
-/* the box itself is a layer of its own, so the two still to come can fade back while their names stay readable */
-#ov-home .ov-mini-face::before {
-  content: ""; position: absolute; z-index: -1; inset: 0; border: 1px solid var(--edge); border-radius: inherit;
-  background: var(--surface); box-shadow: inset 0 max(2px, .45cqw) 0 color-mix(in srgb, var(--tint) var(--w), var(--surface));
-}
-#ov-home .ov-mini.is-asteria .ov-mini-face { --tint: var(--asteria); --w: var(--wash-soon); justify-content: flex-end; color: var(--text-2); }
-#ov-home .ov-mini.is-aniketos .ov-mini-face { --tint: var(--aniketos); --w: var(--wash-soon); justify-content: flex-end; color: var(--text-2); }
-#ov-home .ov-mini.is-asteria .ov-mini-face::before,
-#ov-home .ov-mini.is-aniketos .ov-mini-face::before { opacity: .5; }
-#ov-home .ov-mini.is-arche .ov-mini-face { transform: translateY(-5cqw) rotate(-2.5deg) scale(1.06); }
-#ov-home .ov-mini.is-arche .ov-mini-face::before { box-shadow: inset 0 max(2px, .45cqw) 0 var(--arche), var(--lifted); }
-#ov-home .ov-mini-dot { width: 1.6cqw; height: 1.6cqw; min-width: 6px; min-height: 6px; border-radius: 50%; background: var(--accent); }
-#ov-home .ov-mini-name { font-size: max(11px, 2.7cqw); font-weight: 700; font-stretch: 100%; letter-spacing: -.03em; line-height: 1; }
-#ov-home .ov-mini-shadow {
-  position: absolute; left: 4%; right: 4%; bottom: -1.2cqw; height: 2.4cqw; border-radius: 50%;
-  background: radial-gradient(closest-side, var(--shade), transparent); transform: scale(1.3, 1.7); opacity: .4;
+@media (max-width: 559px) {
+  .ov-models { grid-template-columns: minmax(0, 1fr); }
+  .ov-model { min-height: 0; }
 }
 
-#ov-home .ov-tray {
-  --tint: var(--arche);
-  position: absolute; z-index: 2; left: calc(50% - 15cqw); top: 25cqw; width: 30cqw; height: 29cqw;
-  display: flex; flex-direction: column; justify-content: flex-end; gap: .8cqw; padding: 2.2cqw;
-  border: 1px solid var(--edge); border-radius: 1.6cqw 1.6cqw .4cqw .4cqw; transform-origin: 50% 100%;
-  background: var(--surface); box-shadow: inset 0 max(2px, .5cqw) 0 color-mix(in srgb, var(--tint) var(--wash), var(--surface));
+/* ---- how it works: a tour. The stage stays in view while the four steps scroll by beside it (above them on narrow
+   screens); it shows the screen of the step level with it, and each step's rule fills in as it's passed. */
+.ov-tour { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); column-gap: clamp(32px, 5vw, 80px); }
+.ov-tour-stage {
+  position: sticky; z-index: 1; grid-column: 2; grid-row: 1; align-self: start; display: grid;
+  top: max(calc(var(--header) + 16px), calc((100vh + var(--header) - var(--stage-h, 440px)) / 2));
 }
-#ov-home .ov-tray-name { font-size: max(11px, 2.9cqw); font-weight: 700; font-stretch: 100%; letter-spacing: -.03em; line-height: 1; }
-#ov-home .ov-tray-count { font-size: max(11px, 2.1cqw); line-height: 1.2; color: var(--text-2); font-variant-numeric: tabular-nums; }
-#ov-home .ov-drop {
-  position: absolute; z-index: 1; display: block; border: 1px solid var(--edge); background: var(--surface);
-  transform: rotate(var(--r, 0deg));
+.ov-tour-shot { grid-area: 1 / 1; }
+.ov-tour .ov-shot { padding: clamp(16px, 3vw, 40px) clamp(16px, 3vw, 40px) 0; }
+.ov-js .ov-tour-shot {
+  opacity: 0; visibility: hidden; transform: translateY(14px) scale(.985);
+  transition: opacity .45s ease, transform .7s var(--ease-out), visibility 0s linear .45s;
 }
-#ov-home .ov-drop.is-doc {
-  --r: -7deg; left: calc(50% - 11cqw); top: 13cqw; width: 13cqw; height: 17cqw; padding: 2.4cqw 1.8cqw;
-  border-radius: .6cqw; display: grid; align-content: start; gap: 1.3cqw;
+.ov-js .ov-tour-shot.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .45s ease, transform .7s var(--ease-out), visibility 0s; }
+:root:not(.ov-js) .ov-tour-shot:not(.is-active) { display: none; }
+.ov-tour-steps { grid-column: 1; grid-row: 1; }
+.ov-tour-step { display: flex; flex-direction: column; justify-content: center; min-height: 64vh; }
+.ov-tour-text { position: relative; max-width: 28em; padding-top: 20px; }
+.ov-tour-text::before,
+.ov-tour-text::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; transform-origin: 0 50%; }
+.ov-tour-text::before { background: var(--line); }
+.ov-tour-text::after { background: var(--ink); transform: scaleX(var(--fill, 1)); }
+.ov-step-n { display: block; font-size: 14px; font-weight: 500; line-height: 1.3; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.ov-tour-step h3 {
+  margin-top: clamp(16px, 2vw, 24px); font-family: var(--serif); font-weight: 400;
+  font-size: clamp(30px, 1.4vw + 20px, 40px); line-height: 1.08; letter-spacing: -.014em; transition: color .3s ease;
 }
-#ov-home .ov-drop.is-doc i { display: block; height: .7cqw; min-height: 2px; border-radius: 1cqw; background: var(--hairline); }
-#ov-home .ov-drop.is-doc i:first-child { width: 60%; background: var(--text-2); }
-#ov-home .ov-drop.is-doc i:nth-child(3) { width: 85%; }
-#ov-home .ov-drop.is-doc i:last-child { width: 50%; }
-#ov-home .ov-drop.is-rule {
-  display: flex; align-items: center; gap: 1.2cqw; width: 15cqw; height: 4.8cqw; padding: 0 1.4cqw; border-radius: .9cqw;
+.ov-js .ov-tour-step:not([aria-current]) h3 { color: var(--ink-2); }
+.ov-tour-step p { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+/* narrow screens: the stage sits above the steps, and the text of the step being read waits just under it until the
+   next one pushes it on */
+@media (max-width: 899px) {
+  .ov-tour { grid-template-columns: minmax(0, 1fr); }
+  .ov-tour-stage { grid-column: 1; top: var(--header); margin: 0 calc(-1 * var(--gutter)); padding: 12px var(--gutter) 16px; background: var(--page); }
+  .ov-tour-steps { grid-row: 2; }
+  .ov-tour-step { justify-content: flex-start; min-height: 60vh; padding-top: 24px; }
+  .ov-tour-text { position: sticky; top: calc(var(--header) + var(--stage-h, 268px) + 20px); }
+  .ov-tour .ov-shot { height: clamp(180px, min(42vw, 40vh), 340px); }
 }
-#ov-home .ov-drop.is-rule b {
-  flex: none; width: 1.1cqw; height: 2cqw; margin: 0 .5cqw .3cqw .5cqw;
-  border: solid var(--text); border-width: 0 max(1.5px, .42cqw) max(1.5px, .42cqw) 0; transform: rotate(40deg);
+/* a phone on its side has no room to pin anything: the stage and the steps just scroll */
+@media (max-width: 899px) and (max-height: 520px) {
+  .ov-tour-stage, .ov-tour-text { position: static; }
 }
-#ov-home .ov-drop.is-rule i { flex: 1; height: .7cqw; min-height: 2px; border-radius: 1cqw; background: var(--hairline); }
-#ov-home .ov-drop.is-rule-1 { --r: 8deg; left: calc(50% + .5cqw); top: 20.5cqw; }
-#ov-home .ov-drop.is-rule-2 { --r: -4deg; left: calc(50% - 2cqw); top: 23.5cqw; }
+@media (max-width: 559px) { .ov-tour .ov-shot-img { width: 170%; } }
 
-#ov-home .ov-meter { position: absolute; left: 50%; top: 50%; width: 58cqw; transform: translate(-50%, -50%); display: grid; gap: 1.6cqw; }
-#ov-home .ov-meter-label { font-size: max(11px, 2.3cqw); color: var(--text-2); }
-#ov-home .ov-meter-value { font-size: 14cqw; font-weight: 720; font-stretch: 100%; letter-spacing: -.05em; line-height: .95; font-variant-numeric: tabular-nums; }
-#ov-home .ov-meter-bar { position: relative; display: block; height: .8cqw; min-height: 3px; margin-top: 1cqw; border-radius: 1px; background: var(--hairline); overflow: hidden; }
-#ov-home .ov-meter-bar span { position: absolute; left: 0; top: 0; bottom: 0; width: 94%; border-radius: inherit; background: var(--text); }
-#ov-home .ov-ticks { display: grid; grid-template-columns: repeat(16, 1fr); gap: .9cqw; margin-top: 1.2cqw; }
-#ov-home .ov-ticks i { display: block; aspect-ratio: 1; border-radius: .25cqw; border: 1px solid var(--text); background: var(--text); }
-#ov-home .ov-ticks i.is-open { border-color: var(--edge); background: transparent; }
+/* the chat bubble the sample AI puts on a website: its window (a screenshot) above the bubble (a real button that
+   opens and closes it, like the real one). The panel is the website. Sizes are the widget's own, scaled together:
+   the window 372 wide in a 420 by 536 box, the bubble 56 across, 20 in from the right. */
+.ov-chat { position: relative; overflow: hidden; --chat-pad: clamp(12px, 2.2vw, 32px); }
+.ov-tour .ov-chat-box { top: auto; bottom: var(--chat-pad); height: calc(86% - var(--chat-pad)); }
+.ov-chat-box { position: absolute; top: var(--chat-pad); right: var(--chat-pad); height: calc(100% - 2 * var(--chat-pad)); aspect-ratio: 420 / 536; }
+.ov-chat-card {
+  position: absolute; top: 0; right: 0; width: 100%; height: auto; transform-origin: 95.2% 88.5%;
+  transition: opacity .2s ease, transform .55s cubic-bezier(.2, .9, .25, 1.15);
+}
+.ov-js .ov-chat:not(.is-open) .ov-chat-card {
+  opacity: 0; transform: scale(.5) translateY(6%); transition: opacity .2s ease .06s, transform .3s cubic-bezier(.4, 0, 1, 1);
+}
+.ov-chat-bubble {
+  position: absolute; right: 4.762%; bottom: 0; display: grid; place-items: center; width: 13.333%; aspect-ratio: 1 / 1;
+  margin: 0; padding: 0; border: 1px solid rgba(0, 0, 0, .16); border-radius: 50%; background: #ffc21a; color: #000;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .45); cursor: pointer; transition: transform .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.ov-chat-bubble::before { content: ""; position: absolute; inset: -12px; border-radius: 50%; } /* bigger to tap than it looks */
+.ov-chat-bubble svg { width: 48%; height: 48%; }
+@media (hover: hover) { .ov-chat-bubble:hover { transform: translateY(-1px); } }
+.ov-chat-bubble:active { transform: scale(.94); }
+.ov-chat-bubble:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ov-chat.is-open .ov-chat-icon-chat,
+.ov-chat:not(.is-open) .ov-chat-icon-down { display: none; }
 
-#ov-home .ov-site {
-  position: absolute; left: 10cqw; top: 7cqw; width: 72cqw; height: 55cqw; overflow: hidden; overflow: clip;
-  border: 1px solid var(--edge); border-radius: 1.4cqw; background: var(--page);
+/* ---- starter kits: what's in every kit on the left, each kit's documents on the right */
+.ov-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(32px, 5vw, 80px); align-items: start; }
+.ov-split > .ov-head + * { margin-top: 0; }
+.ov-kits { position: relative; }
+.ov-kits::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--ink); transform-origin: 0 50%; }
+.ov-kit { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 4px 24px; padding: 20px 0 21px; border-bottom: 1px solid var(--line); }
+.ov-kit h3 { font-size: 17px; font-weight: 600; line-height: 1.4; letter-spacing: -.01em; }
+.ov-kit-docs { font-size: 16px; line-height: 1.5; color: var(--ink-2); }
+.ov-kit-docs li { display: inline; }
+.ov-kit-docs li:not(:last-child)::after { content: ", "; }
+@media (max-width: 899px) {
+  .ov-split { grid-template-columns: minmax(0, 1fr); }
+  .ov-split > .ov-head + * { margin-top: clamp(32px, 5vw, 48px); }
 }
-#ov-home .ov-site-bar { display: flex; align-items: center; justify-content: center; height: 6.4cqw; border-bottom: 1px solid var(--hairline); background: var(--band); }
-#ov-home .ov-site-bar i { display: block; width: 28cqw; height: 2.6cqw; border-radius: 9px; background: var(--page); }
-#ov-home .ov-site-body { display: grid; gap: 2cqw; padding: 5cqw 5cqw 0; }
-#ov-home .ov-site-body i { display: block; width: 52%; height: 1.2cqw; min-height: 3px; border-radius: 1cqw; background: var(--band); }
-#ov-home .ov-site-body i.is-title { width: 40%; height: 3.4cqw; margin-bottom: 1cqw; background: var(--hairline); }
-#ov-home .ov-site-body i.is-short { width: 36%; }
-#ov-home .ov-site-body i.is-block { width: 34%; height: 13cqw; margin-top: 1.6cqw; border-radius: 1.6cqw; }
-#ov-home .ov-launcher {
-  position: absolute; right: 3cqw; bottom: 3cqw; display: grid; place-items: center; width: 6.8cqw; height: 6.8cqw;
-  border-radius: 50%; background: var(--text); color: var(--page);
-}
-#ov-home .ov-launcher svg { width: 58%; height: 58%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
-#ov-home .ov-chat {
-  position: absolute; right: 3cqw; bottom: 12cqw; display: flex; flex-direction: column; gap: 1.4cqw; width: max(36cqw, 150px); padding: 2.2cqw;
-  border: 1px solid var(--edge); border-radius: 1.4cqw; background: var(--surface); box-shadow: var(--raised); transform-origin: 92% 100%;
-}
-#ov-home .ov-bubble { max-width: 92%; padding: 1.1cqw 1.8cqw; border-radius: 2.2cqw; font-size: max(11px, 2.2cqw); line-height: 1.25; white-space: nowrap; }
-#ov-home .ov-bubble.is-q { align-self: flex-end; background: var(--text); color: var(--page); }
-#ov-home .ov-bubble.is-a {
-  align-self: flex-start; border: 1px solid var(--edge); background: var(--band);
-}
-#ov-home .ov-typing { position: absolute; left: 2.2cqw; bottom: 2.6cqw; display: flex; gap: .7cqw; padding: 1.4cqw 1.8cqw; border-radius: 2.2cqw; background: var(--band); opacity: 0; }
-#ov-home .ov-typing i { display: block; width: 1cqw; height: 1cqw; min-width: 4px; min-height: 4px; border-radius: 50%; background: var(--text-2); }
+@media (max-width: 479px) { .ov-kit { grid-template-columns: minmax(0, 1fr); } }
 
-/* ---- starter kits: four hairline columns like How it works, each with its line drawing and its three documents.
-   They aren't controls, so nothing reacts to the pointer. */
-#ov-home .ov-kits { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 56px; }
-#ov-home .ov-kit { display: flex; flex-direction: column; padding-top: 24px; border-top: 1px solid var(--hairline); }
-#ov-home .ov-kit h3 { margin-top: 22px; font-size: 22px; font-weight: 700; font-stretch: 100%; letter-spacing: -.03em; line-height: 1.2; }
-#ov-home .ov-kit-docs { display: grid; gap: 8px; margin-top: 14px; }
-#ov-home .ov-kit-docs li { display: flex; align-items: center; gap: 10px; font-size: 15px; line-height: 1.35; color: var(--text-2); }
-/* a small page with a folded corner, drawn in the text's own color */
-#ov-home .ov-kit-docs li::before {
-  content: ""; flex: none; width: 11px; height: 14px; background: currentColor;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='none' stroke='%23000' stroke-width='1.4' stroke-linejoin='round' d='M1.2.7h5.6l3.5 3.5v9.1H1.2zM6.8.7v3.5h3.5'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='none' stroke='%23000' stroke-width='1.4' stroke-linejoin='round' d='M1.2.7h5.6l3.5 3.5v9.1H1.2zM6.8.7v3.5h3.5'/%3E%3C/svg%3E") center / contain no-repeat;
-}
-#ov-home .ov-glyph {
-  width: 44px; height: 44px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; stroke-linejoin: miter;
-}
-#ov-home .ov-glyph .ov-g-dot { fill: currentColor; stroke: none; }
+/* ---- closing: the same shape as the hero */
+.ov-closing { margin-top: clamp(112px, 13vw, 200px); padding-bottom: clamp(88px, 10vw, 144px); }
+.ov-closing .ov-display { font-size: clamp(36px, 3.4vw + 18px, 64px); }
 
-/* ---- footer */
-#ov-home .ov-foot { padding: 28px 0 40px; font-size: 14px; color: var(--text-2); }
-#ov-home .ov-foot-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 24px; }
-#ov-home .ov-foot a {
-  display: inline-flex; align-items: center; min-height: 44px; color: var(--text);
-  text-decoration: underline; text-decoration-color: var(--hairline); text-decoration-thickness: 1px; text-underline-offset: 4px;
-  transition: text-decoration-color .25s var(--ease);
+/* ---- footer: always dark */
+.ov-foot {
+  --page: #000000; --panel: #1f1f1f; --ink: #f5f5f5; --ink-2: #a3a3a3; --line: #2a2a2a;
+  padding: clamp(48px, 6vw, 80px) 0 28px; border-top: 1px solid var(--foot-edge);
+  background: var(--page); color: var(--ink); font-size: 15px; line-height: 1.5;
 }
-@media (hover: hover) { #ov-home .ov-foot a:hover { text-decoration-color: currentColor; } }
+@media (prefers-contrast: more) { .ov-foot { --ink-2: #d6d6d6; --line: #7a7a7a; } }
+.ov-foot-top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 80px); }
+.ov-foot-by { margin-top: 6px; color: var(--ink-2); }
+.ov-foot-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.ov-foot-title { font-size: 15px; font-weight: 600; line-height: 1.4; }
+.ov-foot-cols ul { margin-top: 6px; }
+.ov-foot-cols a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); transition: color .15s ease; }
+@media (hover: hover) { .ov-foot-cols a:hover { color: var(--ink); } }
+.ov-foot-bottom {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px;
+  margin-top: clamp(48px, 6vw, 80px); padding-top: 24px; border-top: 1px solid var(--line);
+  font-size: 14px; color: var(--ink-2);
+}
+@media (max-width: 759px) { .ov-foot-top { grid-template-columns: minmax(0, 1fr); } }
 
-/* ---- motion: the load moment, and the drawings in How it works */
-@media (prefers-reduced-motion: no-preference) {
-  /* the headline settles in, then the boxes rise out of the shelf one after another */
-  .ov-js #ov-home .ov-hero-title { animation: ov-settle .9s var(--ease) both; }
-  .ov-js #ov-home .ov-hero-sub { animation: ov-settle .9s var(--ease) .12s both; }
-  .ov-js #ov-home .ov-hero-actions { animation: ov-settle .9s var(--ease) .2s both; }
-  .ov-js #ov-home .ov-plank { animation: ov-plank 1s var(--ease) .3s both; }
-  .ov-js #ov-home .ov-lineup { animation: ov-clip 1.7s linear backwards; }
-  .ov-js #ov-home .ov-riser { animation: ov-rise 1s linear .5s both; }
-  .ov-js #ov-home .ov-slot[data-model="asteria"] .ov-riser { animation-delay: .62s; }
-  .ov-js #ov-home .ov-slot[data-model="aniketos"] .ov-riser { animation-delay: .74s; }
-  .ov-js #ov-home .ov-contact { animation: ov-fade .5s var(--ease) 1.5s both; }
-  /* Arche's dot breathes three times once the boxes are up: the one you can take now */
-  #ov-home .ov-dot::after {
-    content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--accent);
-    animation: ov-breathe 2.8s ease-out 2s 3;
-  }
+/* the appearance setting: System, Light, Dark. It needs JavaScript, so it only shows with it. */
+.ov-appearance { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+:root:not(.ov-js) .ov-appearance { display: none; }
+.ov-seg { display: inline-flex; padding: 2px; border-radius: 999px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--edge); }
+.ov-seg label { position: relative; display: inline-flex; }
+.ov-seg input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.ov-seg span {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px;
+  font-size: 14px; font-weight: 500; line-height: 1; color: var(--ink-2); transition: background-color .15s ease, color .15s ease;
+}
+.ov-seg input:checked + span { background: var(--ink); color: var(--page); }
+.ov-seg input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (hover: hover) { .ov-seg input:not(:checked):hover + span { color: var(--ink); } }
 
-  #ov-home .ov-scene.is-active .ov-mini.is-arche .ov-mini-face { animation: ov-pick 1.1s var(--ease) .35s both; }
-  #ov-home .ov-scene.is-active .ov-mini.is-arche .ov-mini-face::before { animation: ov-pick-lit 1.1s var(--ease) .35s both; }
-  #ov-home .ov-scene.is-active .ov-mini-shadow { animation: ov-pick-shadow 1.1s var(--ease) .35s both; }
-  #ov-home .ov-scene.is-active .ov-mini.is-asteria .ov-mini-face::before,
-  #ov-home .ov-scene.is-active .ov-mini.is-aniketos .ov-mini-face::before { animation: ov-dim .7s var(--ease) .45s both; }
-  #ov-home .ov-scene.is-active .ov-mini.is-asteria .ov-mini-face,
-  #ov-home .ov-scene.is-active .ov-mini.is-aniketos .ov-mini-face { animation: ov-dim-name .7s var(--ease) .45s both; }
+/* ---- motion. Things rise into place once as they come into view (site.js adds .is-in); the hero's screen rises out
+   of its panel; the model cards pop; the rule above the kits draws itself; Arche's dot pings twice. All of it only
+   under .ov-motion, which the head script sets unless Reduce Motion is on: without JavaScript nothing is hidden, and
+   if site.js never runs, everything shows after a moment anyway. */
+:root { --ease-out: cubic-bezier(.16, 1, .3, 1); }
+.ov-motion [data-reveal] { opacity: 0; transform: translateY(24px); }
+.ov-motion [data-reveal="pop"] { transform: translateY(40px) scale(.96); }
+.ov-motion [data-reveal="window"] { transform: none; }
+.ov-motion [data-reveal="window"] .ov-shot-img { transform: translateY(72px); }
+.ov-motion [data-reveal="rule"] { opacity: 1; transform: none; }
+.ov-motion [data-reveal="rule"]::before { transform: scaleX(0); }
+.ov-motion.ov-live [data-reveal] { transition: opacity .8s var(--ease-out) var(--d, 0s), transform 1s var(--ease-out) var(--d, 0s); }
+.ov-motion.ov-live [data-reveal="window"] .ov-shot-img { transition: transform 1.3s var(--ease-out) calc(var(--d, 0s) + .08s); }
+.ov-motion.ov-live [data-reveal="rule"]::before { transition: transform 1.2s var(--ease-out) var(--d, 0s); }
+.ov-motion [data-reveal].is-in { opacity: 1; transform: none; }
+.ov-motion [data-reveal="window"].is-in .ov-shot-img,
+.ov-motion [data-reveal="rule"].is-in::before { transform: none; }
+.ov-motion:not(.ov-live) [data-reveal],
+.ov-motion:not(.ov-live) [data-reveal] .ov-shot-img,
+.ov-motion:not(.ov-live) [data-reveal="rule"]::before { animation: ov-show .6s ease 2.5s forwards; }
+@keyframes ov-show { to { opacity: 1; transform: none; } }
+.ov-motion [data-parallax] { translate: 0 var(--shift, 0px); }
+.ov-motion .ov-model-main.is-in .ov-dot::after { animation: ov-ping 1.5s var(--ease-out) .9s 2; }
+@keyframes ov-ping { from { opacity: .85; transform: scale(.4); } to { opacity: 0; transform: scale(1.9); } }
 
-  #ov-home .ov-scene.is-active .ov-drop { animation: ov-fall .62s both; }
-  #ov-home .ov-scene.is-active .ov-drop.is-doc { animation-delay: .25s; }
-  #ov-home .ov-scene.is-active .ov-drop.is-rule-1 { animation-delay: .85s; }
-  #ov-home .ov-scene.is-active .ov-drop.is-rule-2 { animation-delay: 1.3s; }
-  #ov-home .ov-scene.is-active .ov-tray { animation: ov-squash .4s ease-out .8s, ov-squash .4s ease-out 1.4s, ov-squash .4s ease-out 1.85s; }
-
-  #ov-home .ov-scene.is-active .ov-meter-bar span { animation: ov-grow 1.8s cubic-bezier(.25, .9, .3, 1) .3s both; }
-  #ov-home .ov-scene.is-active .ov-ticks i { animation: ov-tick .3s var(--ease) both; }
-
-  #ov-home .ov-scene.is-active .ov-launcher { animation: ov-pop .5s var(--ease) .15s both; }
-  #ov-home .ov-scene.is-active .ov-chat { animation: ov-open .55s var(--ease) .65s both; }
-  #ov-home .ov-scene.is-active .ov-bubble.is-q { animation: ov-bubble .45s var(--ease) 1.15s both; }
-  #ov-home .ov-scene.is-active .ov-typing { animation: ov-typing 1.1s ease 1.55s both; }
-  /* the typing dots bounce while the dots show (about 1.7s to 2.5s in), then stop */
-  #ov-home .ov-scene.is-active .ov-typing i { animation: ov-bounce .9s ease-in-out 1.5s 2; }
-  #ov-home .ov-scene.is-active .ov-typing i:nth-child(2) { animation-delay: 1.65s; }
-  #ov-home .ov-scene.is-active .ov-typing i:nth-child(3) { animation-delay: 1.8s; }
-  #ov-home .ov-scene.is-active .ov-bubble.is-a { animation: ov-bubble .45s var(--ease) 2.55s both; }
-}
-/* each tick fills a little after the one before */
-#ov-home .ov-ticks i:nth-child(2) { animation-delay: .39s; } #ov-home .ov-ticks i:nth-child(3) { animation-delay: .48s; }
-#ov-home .ov-ticks i:nth-child(4) { animation-delay: .57s; } #ov-home .ov-ticks i:nth-child(5) { animation-delay: .66s; }
-#ov-home .ov-ticks i:nth-child(6) { animation-delay: .75s; } #ov-home .ov-ticks i:nth-child(7) { animation-delay: .84s; }
-#ov-home .ov-ticks i:nth-child(8) { animation-delay: .93s; } #ov-home .ov-ticks i:nth-child(9) { animation-delay: 1.02s; }
-#ov-home .ov-ticks i:nth-child(10) { animation-delay: 1.11s; } #ov-home .ov-ticks i:nth-child(11) { animation-delay: 1.2s; }
-#ov-home .ov-ticks i:nth-child(12) { animation-delay: 1.29s; } #ov-home .ov-ticks i:nth-child(13) { animation-delay: 1.38s; }
-#ov-home .ov-ticks i:nth-child(14) { animation-delay: 1.47s; } #ov-home .ov-ticks i:nth-child(15) { animation-delay: 1.56s; }
-#ov-home .ov-ticks i:nth-child(1) { animation-delay: .3s; } #ov-home .ov-ticks i.is-open { animation: none !important; }
-
-@keyframes ov-settle { from { opacity: 0; transform: translateY(18px); } }
-@keyframes ov-plank { from { opacity: 0; transform: scaleX(.88); } }
-@keyframes ov-clip { from, to { clip-path: inset(-100vh -100vw 0 -100vw); } }
-@keyframes ov-rise {
-  0% { transform: translateY(104%); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
-  58% { transform: translateY(-5%); animation-timing-function: cubic-bezier(.45, 0, .55, 1); }
-  80% { transform: translateY(1.2%); animation-timing-function: cubic-bezier(.45, 0, .55, 1); }
-  100% { transform: translateY(0); }
-}
-@keyframes ov-fade { from { opacity: 0; } }
-@keyframes ov-breathe { from { transform: scale(1); opacity: .55; } 70%, to { transform: scale(3.2); opacity: 0; } }
-@keyframes ov-pick {
-  0% { transform: none; }
-  65% { transform: translateY(-5.8cqw) rotate(-3deg) scale(1.065); }
-}
-@keyframes ov-pick-lit { from { box-shadow: none; } }
-@keyframes ov-pick-shadow { from { transform: none; opacity: 1; } }
-@keyframes ov-dim { from { opacity: 1; } }
-@keyframes ov-dim-name { from { color: var(--text); } }
-@keyframes ov-fall {
-  0% { transform: translateY(-34cqw) rotate(calc(var(--r) * -2)); opacity: 0; animation-timing-function: cubic-bezier(.5, 0, .8, .4); }
-  14% { opacity: 1; }
-  78% { transform: translateY(.9cqw) rotate(var(--r)); animation-timing-function: var(--ease); }
-  100% { transform: rotate(var(--r)); }
-}
-@keyframes ov-squash { 40% { transform: scale(1.02, .965); } }
-@keyframes ov-grow { from { width: 0; } }
-@keyframes ov-tick { from { background: transparent; border-color: var(--hairline); } }
-@keyframes ov-pop { 0% { transform: scale(.3); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } }
-@keyframes ov-open { from { transform: scale(.25); opacity: 0; } }
-@keyframes ov-bubble { from { transform: translateY(1.2cqw) scale(.94); opacity: 0; } }
-@keyframes ov-typing { 0%, 100% { opacity: 0; } 14%, 82% { opacity: 1; } }
-@keyframes ov-bounce { 0%, 100% { transform: none; } 40% { transform: translateY(-.8cqw); } }
-
-/* ---- smaller screens */
-@media (max-width: 1080px) {
-  #ov-home .ov-kits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 860px) {
-  .ov-js #ov-home .ov-how-body { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 40px; }
-  .ov-js #ov-home .ov-stage { order: -1; }
-  #ov-home .ov-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 640px) {
-  #ov-home { font-size: 17px; }
-  #ov-home .ov-wrap { padding: 0 20px; }
-  #ov-home .ov-top-row { min-height: 60px; }
-  #ov-home .ov-top-actions { gap: 4px; }
-  #ov-home .ov-logo { gap: 9px; font-size: 17px; }
-  #ov-home .ov-btn-small { padding: 0 16px; }
-  #ov-home .ov-btn-small .ov-long {
-    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
-  }
-  #ov-home .ov-btn-small .ov-short { display: inline; }
-  #ov-home .ov-hero { padding-top: 28px; padding-bottom: 80px; }
-  #ov-home .ov-hero-sub { margin-top: 16px; font-size: 18px; }
-  #ov-home .ov-hero-actions { gap: 10px; margin-top: 26px; }
-  #ov-home .ov-lead { font-size: 19px; }
-  #ov-home .ov-shelf { margin-top: 44px; }
-  #ov-home .ov-case { --case-x: 12px; margin: 36px -20px 0; padding-top: 22px; border-width: 1px 0; border-radius: 0; }
-  #ov-home .ov-lineup { gap: 9px; }
-  #ov-home .ov-slot { flex: 1 1 0; }
-  #ov-home .ov-plank { height: 9px; }
-  #ov-home .ov-box { padding: 10px 10px 12px; border-radius: 9px 9px 2px 2px; --h: 190px; }
-  #ov-home .ov-slot[data-model="asteria"] .ov-box { --h: 222px; }
-  #ov-home .ov-slot[data-model="aniketos"] .ov-box { --h: 254px; }
-  #ov-home .ov-status { gap: 5px; height: 22px; padding: 0 6px; border-radius: 5px; font-size: 11px; }
-  #ov-home .ov-dot { width: 6px; height: 6px; }
-  #ov-home .ov-box-name { font-size: 19px; }
-  #ov-home .ov-box-name span { margin-bottom: 1px; font-size: 11px; }
-  #ov-home .ov-box-lines { margin-top: 8px; padding-top: 7px; }
-  #ov-home .ov-box-lines li { font-size: 12px; line-height: 1.3; font-stretch: 94%; }
-  #ov-home .ov-box-lines li + li { margin-top: 3px; }
-  #ov-home .ov-steps,
-  .ov-js #ov-home .ov-steps { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  #ov-home .ov-step { padding-bottom: 22px; }
-  .ov-js #ov-home .ov-step { padding: 18px 0 20px; }
-  #ov-home .ov-step-title { font-size: 21px; }
-  #ov-home .ov-step-text { font-size: 16px; }
-  .ov-js #ov-home .ov-stage { border-radius: 10px; }
-  #ov-home .ov-play { right: 10px; bottom: 10px; }
-  #ov-home .ov-kits { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 36px; }
-  /* a row on phones: the drawing on the left, the name and the documents beside it */
-  #ov-home .ov-kit { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 18px; align-items: start; padding: 22px 0 24px; }
-  #ov-home .ov-kit:last-child { border-bottom: 1px solid var(--hairline); }
-  #ov-home .ov-kit .ov-glyph { grid-row: 1 / span 2; }
-  #ov-home .ov-kit h3 { grid-column: 2; margin-top: 0; font-size: 20px; }
-  #ov-home .ov-kit-docs { grid-column: 2; margin-top: 10px; gap: 6px; }
-  #ov-home .ov-foot-row { flex-direction: column; align-items: flex-start; }
-}
-/* the narrowest phones: the mark alone stands for the logo (the name stays for screen readers) */
-@media (max-width: 359px) {
-  #ov-home .ov-wordmark {
-    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
-  }
-  /* the boxes are under 90px wide here: the status loses its pill, the words tighten */
-  #ov-home .ov-box { padding: 9px 8px 10px; }
-  #ov-home .ov-status { height: 18px; padding: 0; gap: 4px; border: 0; background: none; font-size: 11px; }
-  #ov-home .ov-box-name { font-size: 16px; }
-  #ov-home .ov-box-lines li { font-size: 11px; font-stretch: 90%; }
+@media print {
+  .ov-motion [data-reveal], .ov-motion [data-reveal] .ov-shot-img { opacity: 1 !important; transform: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #ov-home *, #ov-home *::before, #ov-home *::after { transition-duration: .01ms !important; }
-}
-/* Reduce Transparency: the header and the play button are solid, with nothing showing through */
-@media (prefers-reduced-transparency: reduce) {
-  #ov-home .ov-top, #ov-home .ov-play { -webkit-backdrop-filter: none; backdrop-filter: none; }
-  #ov-home .ov-top { background: var(--page); }
-  #ov-home .ov-play { background: var(--surface); }
+  :root.ov-theming { transition: none; }
+  *, *::before, *::after { transition-duration: 0s !important; }
 }
