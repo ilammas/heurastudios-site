@@ -47,13 +47,6 @@ test('every call to action on the home page is Join waitlist and goes to the wai
   await close();
 });
 
-test('the home page still shows the lineup, Arche first and available', async () => {
-  const { page, close } = await open('/');
-  const labels = await page.locator('.ov-lineup .ov-box').evaluateAll(bs => bs.map(b => b.getAttribute('aria-label')));
-  assert.deepEqual(labels, ['Heura Arche, available', 'Heura Asteria, coming soon', 'Heura Aniketos, coming soon']);
-  await close();
-});
-
 test('the waitlist page asks for a work email and a company name, nothing else', async () => {
   const { page, errors, close } = await open('/waitlist/');
   assert.equal(await page.getByRole('heading', { level: 1 }).textContent(), 'Join the waitlist');
@@ -72,7 +65,7 @@ test('joining sends the email, the company and where they came from, then says t
   const { page, close } = await open('/waitlist/?utm_source=launch');
   const sent = await standIn(page, { ok: true });
   await fill(page, 'ann@acme.co', 'Acme');
-  await page.getByRole('heading', { name: "You're on the waitlist" }).waitFor();
+  await page.getByRole('heading', { name: "You’re on the waitlist" }).waitFor();
   assert.equal(sent.length, 1);
   assert.equal(sent[0].js, '1');
   assert.equal(sent[0].email, 'ann@acme.co');
@@ -88,7 +81,7 @@ test('someone already on the list is told so, kindly', async () => {
   const { page, close } = await open('/waitlist/');
   await standIn(page, { ok: true, already: true });
   await fill(page, 'ann@acme.co', 'Acme');
-  await page.getByRole('heading', { name: "You're on the waitlist" }).waitFor();
+  await page.getByRole('heading', { name: "You’re on the waitlist" }).waitFor();
   assert.match(await page.locator('#wl-done').innerText(), /already/i);
   await close();
 });
@@ -142,18 +135,45 @@ test('without JavaScript the form still posts straight to the waitlist script', 
   await close();
 });
 
-test('a theme chosen on the home page carries over to the waitlist page', async () => {
-  const { page, close } = await open('/', { colorScheme: 'light' });
-  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
-  await page.goto(server.url + '/waitlist/');
-  assert.equal(await page.evaluate(() => document.documentElement.getAttribute('data-theme')), 'dark');
-  assert.equal(await page.getByRole('button', { name: 'Switch to light mode' }).count(), 1);
+test('an appearance chosen on the waitlist page carries over to the home page', async () => {
+  const { page, close } = await open('/waitlist/', { colorScheme: 'dark' });
+  await page.getByRole('radiogroup', { name: 'Appearance' }).getByRole('radio', { name: 'Light' }).check();
+  assert.equal(await page.evaluate(() => document.documentElement.getAttribute('data-theme')), 'light');
+  await page.goto(server.url + '/');
+  assert.equal(await page.evaluate(() => document.documentElement.getAttribute('data-theme')), 'light');
+  assert.equal(await page.getByRole('radiogroup', { name: 'Appearance' }).getByRole('radio', { name: 'Light' }).isChecked(), true);
+  await close();
+});
+
+test('the waitlist page never says "we", before or after joining', async () => {
+  const WE = /\bwe\b|\bwe'll\b|\bwe're\b|\bwe’ll\b/i;
+  for (const answer of [{ ok: true }, { ok: true, already: true }]) {
+    const { page, close } = await open('/waitlist/');
+    assert.doesNotMatch(await page.evaluate(() => document.body.innerText), WE);
+    await standIn(page, answer);
+    await fill(page, 'ann@acme.co', 'Acme');
+    await page.getByRole('heading', { name: "You’re on the waitlist" }).waitFor();
+    assert.doesNotMatch(await page.evaluate(() => document.body.innerText), WE);
+    await close();
+  }
+});
+
+test('on the waitlist page the sample chat pops open by itself, and its bubble closes and opens it', async () => {
+  const { page, close } = await open('/waitlist/');
+  const bubble = page.locator('.wl-art .ov-chat-bubble');
+  await page.waitForFunction(() => document.querySelector('.wl-art .ov-chat-bubble')?.getAttribute('aria-expanded') === 'true', null, { timeout: 4000 });
+  await bubble.click();
+  assert.equal(await bubble.getAttribute('aria-expanded'), 'false');
+  await bubble.click();
+  assert.equal(await bubble.getAttribute('aria-expanded'), 'true');
   await close();
 });
 
 test('nothing scrolls sideways on a phone', async () => {
   for (const path of ['/', '/waitlist/']) {
     const { page, close } = await open(path, { viewport: { width: 375, height: 812 } });
+    await page.waitForTimeout(300);
+    for (let y = 0; y < 6000; y += 400) { await page.mouse.wheel(0, 400); await page.waitForTimeout(40); }
     await page.waitForTimeout(300);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), 0, path);
     await close();

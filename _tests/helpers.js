@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 const ROOT = path.resolve(__dirname, '..');
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png',
-  '.ico': 'image/x-icon', '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon', '.svg': 'image/svg+xml', '.webp': 'image/webp',
 };
 
 function startServer() {
