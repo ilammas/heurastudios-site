@@ -123,6 +123,15 @@ test('the models section shows Heura Arche available, then Asteria and Aniketos 
   await close();
 });
 
+test('Asteria is four times as powerful as Arche and needs a GPU', async () => {
+  const { page, close } = await open('/');
+  const asteria = (await page.locator('#models article:has(#ov-asteria) .ov-model-text').innerText()).replace(/\s+/g, ' ').trim();
+  assert.match(asteria, /^Four times as powerful as Arche\./);
+  assert.match(asteria, /GPU/);
+  assert.doesNotMatch(asteria, /'/, 'curly apostrophes, like the rest of the page');
+  await close();
+});
+
 test('each starter kit names its three documents, and the page says what every kit holds', async () => {
   const { page, close } = await open('/');
   const kits = await page.locator('#kits').innerText();
