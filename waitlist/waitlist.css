@@ -1,0 +1,62 @@
+/* The waitlist page (/waitlist/): the same layout as Heura Studio's sign-up page, Heura Arche on its shelf on the
+   left and the form on the right. Builds on site.css: the tokens (light and dark), the header, buttons and boxes. */
+
+:root { --bad: #b42318; } /* 6.1:1 on the page */
+:root[data-theme="dark"] { --bad: #ff8a80; } /* 9.4:1 on the page */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bad: #ff8a80; } }
+
+#ov-home.wl { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+#ov-home .wl-main {
+  flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch;
+  gap: clamp(40px, 7vw, 112px); width: 100%; max-width: 1168px; margin: 0 auto; padding: 8px 24px 32px;
+}
+
+/* the art panel */
+#ov-home .wl-art {
+  display: flex; align-items: center; justify-content: center; min-height: min(640px, calc(100vh - 120px));
+  padding: 48px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--band);
+}
+#ov-home .wl-shelf { width: min(400px, 100%); margin: 0; }
+#ov-home .wl-shelf .ov-slot { flex: 0 1 236px; }
+
+/* the form */
+#ov-home .wl-panel { display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 420px; padding: 40px 0; }
+#ov-home .wl-title { font-size: clamp(40px, 2.6vw + 18px, 56px); font-weight: 720; font-stretch: 100%; letter-spacing: -.034em; line-height: 1.02; text-wrap: balance; }
+#ov-home .wl-lead { margin-top: 16px; font-size: 17px; line-height: 1.5; color: var(--text-2); text-wrap: pretty; }
+#ov-home .wl-fields { display: grid; gap: 18px; margin-top: 32px; }
+#ov-home .wl-field { display: grid; gap: 8px; }
+#ov-home .wl-field label { font-size: 15px; font-weight: 600; line-height: 1.3; }
+#ov-home .wl-field input {
+  display: block; width: 100%; height: 48px; margin: 0; padding: 0 14px;
+  border: 1px solid var(--field); border-radius: 8px; background: var(--surface); color: var(--text);
+  font: inherit; font-size: 17px; line-height: 1.2; transition: border-color .2s var(--ease);
+  -webkit-appearance: none; appearance: none;
+}
+#ov-home .wl-field input::placeholder { color: var(--text-2); opacity: 1; }
+@media (hover: hover) { #ov-home .wl-field input:hover { border-color: var(--text-2); } }
+#ov-home .wl-field input:focus { outline: 2px solid var(--text); outline-offset: 2px; border-color: var(--text-2); }
+#ov-home .wl-field input[aria-invalid="true"] { border-color: var(--bad); }
+/* the browser's autofill keeps the theme's colors */
+#ov-home .wl-field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--text); -webkit-box-shadow: 0 0 0 1000px var(--surface) inset; caret-color: var(--text);
+}
+#ov-home .wl-trap { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+#ov-home .wl-error { margin-top: 14px; font-size: 15px; font-weight: 600; line-height: 1.45; color: var(--bad); }
+#ov-home .wl-error:empty { display: none; }
+#ov-home .wl-submit { width: 100%; margin-top: 24px; }
+#ov-home .wl-submit[disabled] { opacity: .65; cursor: progress; transform: none; }
+#ov-home .wl-fine { margin-top: 16px; font-size: 14px; line-height: 1.5; color: var(--text-2); }
+
+/* joined */
+#ov-home .wl-done:focus { outline: none; }
+#ov-home .wl-home { margin-top: 28px; }
+@media (prefers-reduced-motion: no-preference) {
+  #ov-home .wl-done:not([hidden]) { animation: ov-settle .6s var(--ease) both; }
+}
+
+/* narrower screens: the form alone, centered */
+@media (max-width: 860px) {
+  #ov-home .wl-main { grid-template-columns: minmax(0, 1fr); padding: 0 20px 40px; }
+  #ov-home .wl-art { display: none; }
+  #ov-home .wl-panel { max-width: 460px; margin: 0 auto; padding-top: 24px; justify-content: flex-start; }
+}
