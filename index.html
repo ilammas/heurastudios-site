@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heura Studio</title>
+<meta name="description" content="Build your company's own AI. No code. Pick a base model off the shelf, teach it your documents and rules, then launch it on your website or your own computer.">
+<meta name="theme-color" content="#ffffff" data-light="#ffffff" data-dark="#000000">
+<!-- The theme: the choice saved by the switch in the header, else the system's. Set before anything paints. -->
+<script>(function(d){var t,m;try{t=localStorage.getItem('ov-theme')}catch(e){}if(t!=='light'&&t!=='dark')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t);d.classList.add('ov-js');m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',m.getAttribute('data-'+t))})(document.documentElement)</script>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heurastudios.com/">
+<meta property="og:title" content="Heura Studio">
+<meta property="og:description" content="Build your company's own AI. No code.">
+<meta property="og:image" content="https://heurastudios.com/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<link rel="stylesheet" href="/site.css">
+<script src="/theme.js" defer></script>
+<script src="/home.js" defer></script>
+</head>
+<body>
+<div id="ov-home">
+  <header class="ov-top">
+    <div class="ov-wrap ov-top-row">
+      <a class="ov-logo" href="/"><span class="ov-mark" aria-hidden="true"></span><span class="ov-wordmark">Heura Studio</span></a>
+      <div class="ov-top-actions">
+        <button class="ov-theme" type="button" aria-label="Switch to dark mode">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <mask id="ov-moon-bite"><rect width="24" height="24" fill="#fff"/><circle class="ov-bite" cx="18" cy="6.5" r="6.5" fill="#000"/></mask>
+            <circle class="ov-orb" cx="12" cy="12" r="8" fill="currentColor" mask="url(#ov-moon-bite)"/>
+            <path class="ov-rays" d="M12 1.75v2.1M12 20.15v2.1M1.75 12h2.1M20.15 12h2.1M4.75 4.75l1.5 1.5M17.75 17.75l1.5 1.5M4.75 19.25l1.5-1.5M17.75 6.25l1.5-1.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <a class="ov-btn ov-btn-primary ov-btn-small" href="/waitlist/">Join waitlist</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="ov-hero" aria-labelledby="ov-hero-title">
+      <div class="ov-wrap">
+        <h1 id="ov-hero-title" class="ov-hero-title">Build your company's own AI. No code.</h1>
+        <p class="ov-hero-sub">Pick a base model off the shelf, teach it your documents and rules, then launch it on your website or your own computer.</p>
+        <div class="ov-hero-actions">
+          <a class="ov-btn ov-btn-primary" href="/waitlist/">Join waitlist</a>
+          <a class="ov-btn ov-btn-quiet" href="#how">See how it works</a>
+        </div>
+
+        <!-- The models, weakest to strongest, standing on a shelf. Only Arche, the base model, is out. -->
+        <div class="ov-shelf">
+          <ul class="ov-lineup" aria-label="Heura models">
+            <li class="ov-slot" data-model="arche">
+              <span class="ov-contact" aria-hidden="true"></span>
+              <div class="ov-riser">
+                <article class="ov-box" tabindex="0" aria-label="Heura Arche, available">
+                  <span class="ov-status is-available"><span class="ov-dot" aria-hidden="true"></span>Available</span>
+                  <div class="ov-box-foot">
+                    <p class="ov-box-name"><span>Heura</span> Arche</p>
+                    <ul class="ov-box-lines"><li>2B parameters</li><li>Text and images</li><li>Runs on a laptop</li></ul>
+                  </div>
+                </article>
+              </div>
+            </li>
+            <li class="ov-slot" data-model="asteria">
+              <span class="ov-contact" aria-hidden="true"></span>
+              <div class="ov-riser">
+                <article class="ov-box" tabindex="0" aria-label="Heura Asteria, coming soon">
+                  <span class="ov-status">Coming soon</span>
+                  <div class="ov-box-foot">
+                    <p class="ov-box-name"><span>Heura</span> Asteria</p>
+                    <ul class="ov-box-lines"><li>Stronger than Arche</li></ul>
+                  </div>
+                </article>
+              </div>
+            </li>
+            <li class="ov-slot" data-model="aniketos">
+              <span class="ov-contact" aria-hidden="true"></span>
+              <div class="ov-riser">
+                <article class="ov-box" tabindex="0" aria-label="Heura Aniketos, coming soon">
+                  <span class="ov-status">Coming soon</span>
+                  <div class="ov-box-foot">
+                    <p class="ov-box-name"><span>Heura</span> Aniketos</p>
+                    <ul class="ov-box-lines"><li>Long documents</li><li>Harder questions</li></ul>
+                  </div>
+                </article>
+              </div>
+            </li>
+          </ul>
+          <div class="ov-plank" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ov-how" id="how" aria-labelledby="ov-how-title">
+      <div class="ov-wrap">
+        <h2 id="ov-how-title" class="ov-h2">How it works</h2>
+        <div class="ov-how-body">
+          <!-- home.js turns this list into tabs that drive the preview beside it. -->
+          <ol class="ov-steps">
+            <li class="ov-step">
+              <span class="ov-step-n" aria-hidden="true">1</span>
+              <h3 class="ov-step-title" id="ov-step-pick">Pick</h3>
+              <p class="ov-step-text" id="ov-step-pick-text">Take Heura Arche off the shelf, or start from a kit for support, HR, IT or sales.</p>
+              <span class="ov-step-progress" aria-hidden="true"><span></span></span>
+            </li>
+            <li class="ov-step">
+              <span class="ov-step-n" aria-hidden="true">2</span>
+              <h3 class="ov-step-title" id="ov-step-teach">Teach</h3>
+              <p class="ov-step-text" id="ov-step-teach-text">Upload documents, write rules and add example answers. It uses them right away.</p>
+              <span class="ov-step-progress" aria-hidden="true"><span></span></span>
+            </li>
+            <li class="ov-step">
+              <span class="ov-step-n" aria-hidden="true">3</span>
+              <h3 class="ov-step-title" id="ov-step-train">Train</h3>
+              <p class="ov-step-text" id="ov-step-train-text">Bake the lessons in and watch its readiness score on every exam.</p>
+              <span class="ov-step-progress" aria-hidden="true"><span></span></span>
+            </li>
+            <li class="ov-step">
+              <span class="ov-step-n" aria-hidden="true">4</span>
+              <h3 class="ov-step-title" id="ov-step-launch">Launch</h3>
+              <p class="ov-step-text" id="ov-step-launch-text">Put a chat bubble on your site, call it through an API, or run it on your own computer.</p>
+              <span class="ov-step-progress" aria-hidden="true"><span></span></span>
+            </li>
+          </ol>
+
+          <!-- Simple drawings of each step, not screenshots. Each one ends on its final frame, which is what shows
+               with reduced motion. -->
+          <div class="ov-stage">
+            <div class="ov-scene is-active" id="ov-scene-pick">
+              <div class="ov-art ov-art-pick" role="img" aria-label="Heura Arche lifts off the shelf, ahead of Asteria and Aniketos.">
+                <div class="ov-minis">
+                  <div class="ov-mini is-arche"><span class="ov-mini-shadow"></span><span class="ov-mini-face"><span class="ov-mini-dot"></span><span class="ov-mini-name">Arche</span></span></div>
+                  <div class="ov-mini is-asteria"><span class="ov-mini-face"><span class="ov-mini-name">Asteria</span></span></div>
+                  <div class="ov-mini is-aniketos"><span class="ov-mini-face"><span class="ov-mini-name">Aniketos</span></span></div>
+                </div>
+                <span class="ov-mini-plank"></span>
+              </div>
+            </div>
+            <div class="ov-scene" id="ov-scene-teach">
+              <div class="ov-art ov-art-teach" role="img" aria-label="A document and two rules drop into Heura Arche.">
+                <span class="ov-drop is-doc"><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="ov-drop is-rule is-rule-1"><b></b><i></i></span>
+                <span class="ov-drop is-rule is-rule-2"><b></b><i></i></span>
+                <span class="ov-tray"><span class="ov-tray-name">Arche</span><span class="ov-tray-count" data-count="lessons">3 lessons</span></span>
+                <span class="ov-mini-plank"></span>
+              </div>
+            </div>
+            <div class="ov-scene" id="ov-scene-train">
+              <div class="ov-art ov-art-train" role="img" aria-label="The readiness score counts up to 94 percent as the exam questions pass.">
+                <div class="ov-meter">
+                  <span class="ov-meter-label">Readiness</span>
+                  <span class="ov-meter-value"><span data-count="readiness">94</span>%</span>
+                  <span class="ov-meter-bar"><span></span></span>
+                  <span class="ov-ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="is-open"></i></span>
+                </div>
+              </div>
+            </div>
+            <div class="ov-scene" id="ov-scene-launch">
+              <div class="ov-art ov-art-launch" role="img" aria-label="On a small website, a chat bubble opens and answers a question.">
+                <div class="ov-site">
+                  <span class="ov-site-bar"><i></i></span>
+                  <span class="ov-site-body"><i class="is-title"></i><i></i><i class="is-short"></i><i class="is-block"></i></span>
+                  <span class="ov-chat">
+                    <span class="ov-bubble is-q">Where's my order?</span>
+                    <span class="ov-typing"><i></i><i></i><i></i></span>
+                    <span class="ov-bubble is-a">It ships tomorrow.</span>
+                  </span>
+                  <span class="ov-launcher"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 7.5A2.5 2.5 0 0 1 8.5 5h7A2.5 2.5 0 0 1 18 7.5v5a2.5 2.5 0 0 1-2.5 2.5H12l-3.5 3v-3A2.5 2.5 0 0 1 6 12.5z"/></svg></span>
+                </div>
+              </div>
+            </div>
+            <button class="ov-play" type="button" aria-label="Pause the steps" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="ov-play-pause" d="M9 7v10M15 7v10"/><path class="ov-play-play" d="M9 6.8v10.4l8.2-5.2z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ov-kits-section" id="kits" aria-labelledby="ov-kits-title">
+      <div class="ov-wrap">
+        <h2 id="ov-kits-title" class="ov-h2">Starter kits</h2>
+        <p class="ov-lead">Sample documents, rules, example answers and test questions. Swap in your own anytime.</p>
+        <ul class="ov-kits">
+          <li class="ov-kit">
+            <svg class="ov-glyph is-support" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <g class="ov-g-move"><path d="M8 11.5A3.5 3.5 0 0 1 11.5 8h17A3.5 3.5 0 0 1 32 11.5v11a3.5 3.5 0 0 1-3.5 3.5H18l-6.5 5.5V26H11.5A3.5 3.5 0 0 1 8 22.5z"/>
+              <circle class="ov-g-dot" cx="15" cy="17" r="1.3"/><circle class="ov-g-dot" cx="20" cy="17" r="1.3"/><circle class="ov-g-dot" cx="25" cy="17" r="1.3"/></g>
+            </svg>
+            <h3>Customer support</h3>
+            <p>Refunds, shipping and warranty</p>
+          </li>
+          <li class="ov-kit">
+            <svg class="ov-glyph is-hr" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <rect x="8" y="10" width="24" height="22" rx="3.5"/><path d="M8 16.5h24M14 7.5v5M26 7.5v5"/>
+              <path class="ov-g-check" d="M15.5 24.2l3.2 3.1 6.2-6.4" pathLength="1"/>
+            </svg>
+            <h3>HR policy</h3>
+            <p>Time off, benefits and remote work</p>
+          </li>
+          <li class="ov-kit">
+            <svg class="ov-glyph is-it" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <g class="ov-g-move"><circle cx="14" cy="20" r="6"/><circle cx="14" cy="20" r="1.6"/><path d="M20 20h13M28 20v4.5M32.5 20v3"/></g>
+            </svg>
+            <h3>IT helpdesk</h3>
+            <p>Passwords, VPN and laptops</p>
+          </li>
+          <li class="ov-kit">
+            <svg class="ov-glyph is-sales" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+              <g class="ov-g-move"><path d="M21.6 7H31a2 2 0 0 1 2 2v9.4a2 2 0 0 1-.6 1.4L19.8 32.4a2 2 0 0 1-2.8 0l-9.4-9.4a2 2 0 0 1 0-2.8L20.2 7.6a2 2 0 0 1 1.4-.6z"/><circle cx="27" cy="13" r="2"/></g>
+            </svg>
+            <h3>Sales</h3>
+            <p>Products, pricing and objections</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="ov-access" aria-labelledby="ov-access-title">
+      <div class="ov-wrap">
+        <h2 id="ov-access-title" class="ov-h2">Be first in line for the beta</h2>
+        <p class="ov-lead">Join the waitlist and we'll email you when the Heura Studio beta opens.</p>
+        <a class="ov-btn ov-btn-primary" href="/waitlist/">Join waitlist</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ov-foot">
+    <div class="ov-wrap ov-foot-row">
+      <span>Heura Studio by Ostravanne</span>
+      <a href="mailto:ryantian@ostravanne.com,leoli@ostravanne.com">Email the founders</a>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
