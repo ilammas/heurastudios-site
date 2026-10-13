@@ -47,6 +47,18 @@ test('every call to action on the home page is Join waitlist and goes to the wai
   await close();
 });
 
+test('"Email the founders" writes to Ryan, Leo and Ethan, on both pages', async () => {
+  for (const path of ['/', '/waitlist/']) {
+    const { page, errors, close } = await open(path);
+    const link = page.getByRole('link', { name: 'Email the founders' });
+    assert.equal(await link.count(), 1, path);
+    assert.equal(await link.getAttribute('href'),
+      'mailto:ryantian@ostravanne.com,leoli@ostravanne.com,ethanwang@ostravanne.com', path);
+    assert.deepEqual(errors, []);
+    await close();
+  }
+});
+
 test('the waitlist page asks for a work email and a company name, nothing else', async () => {
   const { page, errors, close } = await open('/waitlist/');
   assert.equal(await page.getByRole('heading', { level: 1 }).textContent(), 'Join the waitlist');
