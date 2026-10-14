@@ -302,3 +302,45 @@ test('nothing on the home page moves forever', async () => {
   assert.deepEqual(forever, []);
   await close();
 });
+
+// Ryan, Oct 14, 2026 ("bruh upload the that bruh", to "Say the word and I'll add it anyway"): the page says that an AI
+// can answer with Claude, GPT, Gemini or the company's own model instead, with the company's own key, as the Heura
+// Studios app's Models page does. It sits under the model cards, as a list like the starter kits.
+test('Models: or bring your own, with your company’s own key: Claude, GPT, Gemini or your own model', async () => {
+  const { page, errors, close } = await open('/');
+  const byo = page.locator('#models .ov-byo');
+  assert.equal(await byo.count(), 1);
+  assert.equal((await byo.locator('.ov-byo-title').innerText()).trim(), 'Or bring your own');
+  assert.match(await byo.locator('.ov-section-lead').innerText(), /another model instead, using your company’s own key/);
+  assert.deepEqual(await byo.locator('.ov-kit h4').allTextContents(), ['Claude', 'GPT', 'Gemini', 'Your own model']);
+  assert.match(await byo.locator('.ov-kit').nth(1).innerText(), /GPT can also be trained on your examples/);
+  assert.match(await byo.locator('.ov-kit').nth(3).innerText(), /Ollama, LM Studio, vLLM/);
+  const after = await page.evaluate(() => Boolean(document.querySelector('#models .ov-models')
+    .compareDocumentPosition(document.querySelector('#models .ov-byo')) & Node.DOCUMENT_POSITION_FOLLOWING));
+  assert.ok(after, 'under the model cards');
+  assert.deepEqual(errors, []);
+  await close();
+});
+
+// Each name in Bring your own sits level with its line, as in the starter kits (an h4 gets no browser margin).
+test('Models: in Bring your own, each name lines up with its line, as in the starter kits', async () => {
+  for (const viewport of [{ width: 1280, height: 860 }, { width: 375, height: 812 }]) {
+    const { page, close } = await open('/', { viewport });
+    const rows = await page.locator('#models .ov-byo .ov-kit').evaluateAll(els => els.map(el => {
+      const name = el.querySelector('h4'), line = el.querySelector('.ov-kit-docs');
+      return { name: name.textContent, margin: getComputedStyle(name).margin,
+        top: name.getBoundingClientRect().top, lineTop: line.getBoundingClientRect().top,
+        bottom: name.getBoundingClientRect().bottom, rowTop: el.getBoundingClientRect().top };
+    }));
+    const kit = await page.locator('#kits .ov-kit').first().evaluate(el =>
+      el.querySelector('h3').getBoundingClientRect().top - el.getBoundingClientRect().top);
+    assert.equal(rows.length, 4);
+    for (const r of rows) {
+      assert.equal(r.margin, '0px', `${r.name} at ${viewport.width}px`);
+      assert.ok(Math.abs((r.top - r.rowTop) - kit) <= 1, `${r.name} starts where a kit's name does at ${viewport.width}px`);
+      if (viewport.width >= 480) assert.ok(Math.abs(r.top - r.lineTop) <= 4, `${r.name} level with its line: ${JSON.stringify(r)}`);
+      else assert.ok(r.lineTop - r.bottom <= 8, `${r.name} close above its line: ${JSON.stringify(r)}`);
+    }
+    await close();
+  }
+});
