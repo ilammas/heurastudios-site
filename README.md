@@ -18,6 +18,11 @@ saves a work email and a company name to the "Heura waitlist" Google Sheet in Ry
   contact emails, the provider list...) still need filling: they went live with them on Oct 13, 2026.
 - `_backend/`: the Apps Script behind the form (`core.js` is the logic, `Code.gs` the Google side). In the Apps
   Script project they're pasted into one file.
+- `favicon.ico`, `favicon.svg`, `favicon-32.png`, `icon-512.png`, `apple-touch-icon.png`: the logo mark (an ink
+  square with Heura orange through its middle third, as in the header) for tabs, bookmarks, search results and
+  home screens; the SVG turns light in dark mode like the header's. `og-image.png`: the 1200x630 card a shared
+  link shows (the logo, the headline and the Overview screen). Every page names the site Heura Studios for link
+  previews (`og:site_name`), and the home page for search results (WebSite data).
 - `CNAME`: GitHub Pages serves this repo at heurastudios.com. Pages doesn't publish `_` folders.
 
 ## Tests
