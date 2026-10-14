@@ -1,0 +1,114 @@
+// Ryan, Oct 14, 2026: "change the website name into heura studios with an S and add the logo to the thing where you
+// see the link". A browser tab, a bookmark and a search result show the site's icon; a shared link's preview shows
+// the site's name and a picture. All of them are the Heura Studios logo and name: the ink square with the orange
+// band through its middle, as in the header.
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const { startServer, launch, ROOT } = require('./helpers');
+
+const PAGES = ['/', '/waitlist/', '/privacy/', '/terms/'];
+const CARD = 'https://heurastudios.com/og-image.png';
+
+function pngSize(file) {
+  const b = fs.readFileSync(path.join(ROOT, file));
+  assert.equal(b.toString('latin1', 1, 4), 'PNG', `${file} is a PNG`);
+  return [b.readUInt32BE(16), b.readUInt32BE(20)];
+}
+
+let server, browser;
+test.before(async () => { server = await startServer(); browser = await launch(); });
+test.after(async () => { await browser.close(); await server.close(); });
+
+test('every page links the same icons: the ICO, the SVG, two PNGs and the Apple touch icon', async () => {
+  for (const p of PAGES) {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    await page.goto(server.url + p);
+    const icons = await page.locator('link[rel="icon"]').evaluateAll(
+      els => els.map(e => [e.getAttribute('href'), e.getAttribute('type'), e.getAttribute('sizes')]));
+    assert.deepEqual(icons, [
+      ['/favicon.ico', null, '48x48'],
+      ['/favicon.svg', 'image/svg+xml', null],
+      ['/favicon-32.png', 'image/png', '32x32'],
+      ['/icon-512.png', 'image/png', '512x512'],
+    ], p);
+    assert.equal(await page.locator('link[rel="apple-touch-icon"]').getAttribute('href'), '/apple-touch-icon.png', p);
+    await ctx.close();
+  }
+});
+
+test('the icon files have the sizes their links promise, and the card is 1200 x 630', () => {
+  const ico = fs.readFileSync(path.join(ROOT, 'favicon.ico'));
+  assert.equal(ico.readUInt16LE(2), 1, 'an icon file');
+  const sizes = [];
+  for (let i = 0; i < ico.readUInt16LE(4); i++) sizes.push(ico[6 + 16 * i] || 256);
+  assert.deepEqual(sizes.sort((a, b) => a - b), [16, 32, 48]);
+  assert.deepEqual(pngSize('favicon-32.png'), [32, 32]);
+  assert.deepEqual(pngSize('icon-512.png'), [512, 512]);
+  assert.deepEqual(pngSize('apple-touch-icon.png'), [180, 180]);
+  assert.deepEqual(pngSize('og-image.png'), [1200, 630]);
+  assert.match(fs.readFileSync(path.join(ROOT, 'favicon.svg'), 'utf8'), /^<svg [^>]*viewBox="0 0 24 24"/);
+});
+
+test('each icon is the logo: an ink square with Heura orange through its middle third', async () => {
+  const ctx = await browser.newContext({ colorScheme: 'light' });
+  const page = await ctx.newPage();
+  await page.goto(server.url + '/');
+  for (const file of ['favicon.svg', 'favicon.ico', 'favicon-32.png', 'icon-512.png', 'apple-touch-icon.png']) {
+    const px = await page.evaluate(async src => {
+      const img = new Image();
+      img.src = src;
+      await img.decode();
+      const c = document.createElement('canvas');
+      c.width = c.height = 96;
+      const g = c.getContext('2d');
+      g.drawImage(img, 0, 0, 96, 96);
+      const at = (x, y) => Array.from(g.getImageData(x, y, 1, 1).data);
+      return { middle: at(48, 48), top: at(48, 20), bottom: at(48, 76) };
+    }, `${server.url}/${file}`);
+    const [r, gr, b] = px.middle;
+    assert.ok(r > 225 && gr > 50 && gr < 120 && b < 60, `${file}: orange in the middle, got ${px.middle}`);
+    for (const edge of ['top', 'bottom']) {
+      const [er, eg, eb, ea] = px[edge];
+      assert.ok(er < 40 && eg < 40 && eb < 40 && ea > 200, `${file}: ink at the ${edge}, got ${px[edge]}`);
+    }
+  }
+  await ctx.close();
+});
+
+test('every page shares as Heura Studios: the site name, the card with its size and words, a large card on X', async () => {
+  for (const p of PAGES) {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    await page.goto(server.url + p);
+    const tags = await page.evaluate(() => Object.fromEntries(
+      [...document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]')]
+        .map(m => [m.getAttribute('property') || m.getAttribute('name'), m.getAttribute('content')])));
+    assert.equal(tags['og:site_name'], 'Heura Studios', p);
+    assert.equal(tags['og:image'], CARD, p);
+    assert.equal(tags['og:image:width'], '1200', p);
+    assert.equal(tags['og:image:height'], '630', p);
+    assert.match(tags['og:image:alt'] || '', /^Heura Studios/, p);
+    assert.equal(tags['twitter:card'], 'summary_large_image', p);
+    assert.equal(tags['twitter:title'], tags['og:title'], p);
+    assert.equal(tags['twitter:description'], tags['og:description'], p);
+    assert.equal(tags['twitter:image'], CARD, p);
+    await ctx.close();
+  }
+});
+
+test('the home page names the site for search results: WebSite data called Heura Studios', async () => {
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await page.goto(server.url + '/');
+  const data = await page.locator('script[type="application/ld+json"]').evaluateAll(
+    els => els.map(e => JSON.parse(e.textContent)));
+  const site = data.find(d => d['@type'] === 'WebSite');
+  assert.ok(site, 'a WebSite entry');
+  assert.equal(site['@context'], 'https://schema.org');
+  assert.equal(site.name, 'Heura Studios');
+  assert.equal(site.url, 'https://heurastudios.com/');
+  await ctx.close();
+});
