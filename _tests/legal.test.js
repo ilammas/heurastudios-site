@@ -17,8 +17,8 @@ async function open(path, options = {}) {
   return { page, errors, status: res.status(), close: () => ctx.close() };
 }
 
-const PAGES = [['/privacy/', 'Heura Studio Privacy Policy', 'Privacy Policy – Heura Studio'],
-  ['/terms/', 'Heura Studio Terms of Service', 'Terms of Service – Heura Studio']];
+const PAGES = [['/privacy/', 'Heura Studios Privacy Policy', 'Privacy Policy – Heura Studios'],
+  ['/terms/', 'Heura Studios Terms of Service', 'Terms of Service – Heura Studios']];
 
 test('the Privacy Policy and the Terms of Service are pages of their own', async () => {
   for (const [path, heading, title] of PAGES) {
