@@ -50,8 +50,8 @@
   function joined(address, already) {
     form.hidden = true;
     doneText.textContent = already
-      ? 'You were already on it. An email will go to ' + address + ' when the Heura Studio beta opens.'
-      : 'An email will go to ' + address + ' when the Heura Studio beta opens.';
+      ? 'You were already on it. An email will go to ' + address + ' when the Heura Studios beta opens.'
+      : 'An email will go to ' + address + ' when the Heura Studios beta opens.';
     done.hidden = false;
     done.focus();
   }
