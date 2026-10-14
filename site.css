@@ -314,7 +314,8 @@ button, input { font: inherit; color: inherit; }
 @media (prefers-contrast: more) { .ov-foot { --ink-2: #d6d6d6; --line: #7a7a7a; } }
 .ov-foot-top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px clamp(32px, 5vw, 80px); }
 .ov-foot-by { margin-top: 6px; color: var(--ink-2); }
-.ov-foot-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.ov-foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+@media (max-width: 559px) { .ov-foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .ov-foot-title { font-size: 15px; font-weight: 600; line-height: 1.4; }
 .ov-foot-cols ul { margin-top: 6px; }
 .ov-foot-cols a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); transition: color .15s ease; }

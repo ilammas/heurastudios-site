@@ -7,10 +7,15 @@ saves a work email and a company name to the "Heura waitlist" Google Sheet in Ry
   header, the Appearance setting in the footer, things rising into place as they scroll in (not with Reduce
   Motion), the How it works tour (a stage that stays in view and shows each step's screen) and the sample chat
   whose bubble opens and closes it.
-- `img/`: real Heura Studio screens, made with a sample AI for a made-up shop ("Fernbrook Supply Co."), one per
+- `img/`: real Heura Studio screens (retaken Oct 13, 2026 in the Studio's console look, from a throwaway Studio in
+  public mode with the stand-in model, so nothing the model says is shown), made with a sample AI for a made-up shop ("Fernbrook Supply Co."), one per
   appearance (`-light.webp`, `-dark.webp`). `studio-chat-card.webp` is the chat window alone on a transparent
   background (the same in both appearances); the site draws the bubble under it.
 - `waitlist/`: the form. Its `action` is the Apps Script web app.
+- `privacy/`, `terms/` and `legal.css`: the Privacy Policy and the Terms of Service (Leo's text of Oct 13, 2026,
+  the same words as the Heura Studio app's /privacy and /terms; the training switch reads opt-in), linked from
+  every page's footer and from the waitlist form. Their placeholders ([insert date before publishing], the
+  contact emails, the provider list...) need filling before they go live.
 - `_backend/`: the Apps Script behind the form (`core.js` is the logic, `Code.gs` the Google side). In the Apps
   Script project they're pasted into one file.
 - `CNAME`: GitHub Pages serves this repo at heurastudios.com. Pages doesn't publish `_` folders.
