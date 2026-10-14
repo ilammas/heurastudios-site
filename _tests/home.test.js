@@ -178,10 +178,21 @@ for (const width of [320, 375]) {
   });
 }
 
+test('the page sells Heura Studios first: How it works and Starter kits come before Models', async () => {
+  const { page, close } = await open('/');
+  assert.deepEqual(await page.locator('main > section[id]').evaluateAll(s => s.map(x => x.id)), ['how', 'kits', 'models']);
+  assert.match(await page.locator('.ov-hero-lead').innerText(), /Heura Studios/);
+  assert.match(await page.locator('#how .ov-section-lead').innerText(), /Heura Studios/);
+  assert.match(await page.locator('meta[name="description"]').getAttribute('content'), /Heura Studios/);
+  assert.deepEqual(await page.locator('footer nav').first().locator('a').allTextContents(),
+    ['How it works', 'Starter kits', 'Models', 'Join waitlist'], 'the footer lists them in the same order');
+  await close();
+});
+
 test('the header links go to sections that exist', async () => {
   const { page, close } = await open('/');
   const links = await page.locator('header nav a').evaluateAll(as => as.map(a => [a.textContent.trim(), a.getAttribute('href')]));
-  assert.deepEqual(links, [['Models', '#models'], ['How it works', '#how'], ['Starter kits', '#kits']]);
+  assert.deepEqual(links, [['How it works', '#how'], ['Starter kits', '#kits'], ['Models', '#models']]);
   for (const [, href] of links) assert.equal(await page.locator(href).count(), 1, href);
   await close();
 });
