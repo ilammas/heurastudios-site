@@ -24,12 +24,41 @@ saves a work email and a company name to the "Heura waitlist" Google Sheet in Ry
   link shows (the logo, the headline and the Overview screen). Every page names the site Heura Studios for link
   previews (`og:site_name`), and the home page for search results (WebSite data).
 - `CNAME`: GitHub Pages serves this repo at heurastudios.com. Pages doesn't publish `_` folders.
+- The blog (`/blog/`): GitHub Pages builds the repo with Jekyll, and only the blog uses it. Posts are Markdown in
+  `_posts/`; the list is `blog/index.html`; both use `_layouts/` (`base.html`: the header and footer; `post.html`).
+  Its look is `blog.css`. Report PDFs are in `reports/`, a post's pictures in `img/blog/`. `_config.yml` keeps
+  `docs/` and this README off the site. Every other page has no front matter, so Jekyll copies it as it is.
+
+## Writing a blog post
+
+1. On GitHub, open the repo's `_posts` folder, then **Add file → Create new file**.
+2. Name it with the date and a short name in lowercase with dashes: `2026-10-20-what-we-learned.md`. The post's
+   address is the short name: heurastudios.com/blog/what-we-learned/.
+3. Start the file with these lines (the report line only if there's a PDF), then write the post in Markdown below
+   them: `## Heading`, paragraphs, `- lists`, `**bold**`, `[a link](https://…)`, tables and images.
+
+   ```
+   ---
+   title: "What we learned from Arche 0.22"
+   description: "One or two sentences: the blog list, search results and link previews show it."
+   author: Ryan
+   report: /reports/heura-eval-005.pdf
+   ---
+   ```
+
+4. **Commit changes.** The site updates in about a minute.
+5. A report: open the `reports` folder, **Add file → Upload files**, and name the PDF like the post's report line.
+   A picture for a post: upload it to `img/blog/` and use `![What the picture shows](/img/blog/name.png)`.
+
+If a post's top lines are broken (a missing `---`, or a title with a colon not in quotes), GitHub emails the error and
+the site keeps its last good version. Fix the file and commit again.
 
 ## Tests
 
 - Backend: `cd _backend && node --test`
 - Pages (headless Chromium through Playwright): `NODE_PATH=$(npm root -g) node --test _tests/*.test.js`.
-  The tests stand in for the Apps Script, so they need no Google setup.
+  The tests stand in for the Apps Script, so they need no Google setup. The blog's tests build the site with
+  Jekyll 3.10, the version GitHub Pages runs (`gem install jekyll -v 3.10.0 kramdown-parser-gfm`).
 
 ## The sheet
 

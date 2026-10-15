@@ -1,0 +1,16 @@
+# heurastudios.com on GitHub Pages, which builds this repo with Jekyll.
+# Only the blog uses Jekyll: posts are Markdown in _posts/ (YYYY-MM-DD-slug.md, shown at /blog/slug/), the list is
+# blog/index.html and both use _layouts/. Every other page has no front matter, so Jekyll copies it as it is.
+title: Heura Studios
+url: https://heurastudios.com
+timezone: America/Vancouver
+permalink: /blog/:title/
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+defaults:
+  - scope: { path: "", type: posts }
+    values: { layout: post }
+# not published: this repo's notes and design docs (folders starting with _ never are)
+exclude: [docs, README.md, Gemfile, Gemfile.lock, node_modules, vendor]
