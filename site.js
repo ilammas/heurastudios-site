@@ -6,6 +6,8 @@
 // - the header's rule once the page scrolls.
 // - motion, only when the head script set html.ov-motion (not with Reduce Motion): things rise into place as they
 //   come into view ([data-reveal] gets .is-in, once), and the hero's screen drifts a little as the page scrolls.
+// - the hero's scene, with motion in a window at least 560px tall: it opens like the share card, then holds still
+//   while the screen comes to the middle and the lead and the buttons come in (see below).
 // - How it works: the step level with the stage (the middle of the window; just under the stage on narrow screens,
 //   where it sits above the steps) shows its screen, and each step's rule fills in as it's passed. This follows scrolling
 //   with or without motion; Reduce Motion only drops the transitions.
@@ -148,6 +150,7 @@
   function drift() {
     var height = window.innerHeight;
     for (var d = 0; d < drifting.length; d++) {
+      if (scene && hero.contains(drifting[d])) { drifting[d].style.removeProperty('--shift'); continue; }
       var box = drifting[d].parentNode.getBoundingClientRect();
       if (box.bottom < 0 || box.top > height) continue;
       var passed = (height - box.top) / (height + box.height); // 0 as it enters at the bottom, 1 as it leaves at the top
@@ -199,6 +202,190 @@
     if (stage) tour.style.setProperty('--stage-h', stage.offsetHeight + 'px');
   }
 
+  // ---- the hero's scene. It opens like the share card: the headline on the left, in the middle of the window's height,
+  // and the screen on the right, level with the headline's top and running off the window's edge and bottom (in
+  // a narrow window: under the headline, peeking in from the right). Then the stage holds still while the runway
+  // scrolls by: the headline rises to its place, and the screen comes back to the middle in a straight diagonal line, a
+  // little with every bit of scrolling, settling to its laid-out size as it lands. The lead comes in word by word
+  // behind it, each line once the screen has moved past it, then the buttons pop in, taking clicks once they mostly
+  // show. Scrolling back plays it backwards. Tabbing to a button plays the scene to its end, and a focused button shows
+  // wherever the page is scrolled. Turning on Reduce Motion lays the hero out, as do no motion at load,
+  // a window under 560px tall, and a browser that can't clip the screen's overflow without unsticking the stage
+  // (overflow-x: clip) or move it with translate and scale.
+
+  var hero = document.querySelector('.ov-hero');
+  var heroStage = hero ? hero.querySelector('.ov-hero-stage') : null;
+  var heroShot = hero ? hero.querySelector('.ov-shot') : null;
+  var heroTitle = hero ? hero.querySelector('h1') : null;
+  var heroSide = hero ? hero.querySelector('.ov-intro-side') : null;
+  var heroLead = hero ? hero.querySelector('.ov-hero-lead') : null;
+  var heroButtons = heroSide ? heroSide.querySelectorAll('.ov-btn') : [];
+  var heroReady = Boolean(heroStage && heroShot && heroTitle && heroSide && heroLead && hero.querySelector('.ov-hero-runway'));
+  var heroWords = [];
+  var tall = window.matchMedia ? window.matchMedia('(min-height: 560px)') : null;
+  var able = Boolean(window.CSS && CSS.supports && CSS.supports('overflow-x', 'clip') && CSS.supports('translate', '1px'));
+  var scene = null; // while it's on: where it starts and how long it runs (in scrolling), the screen's offset and size at its start
+  var staged = { width: 0, height: 0 }; // the window it was measured in
+
+  function wanted() { return heroReady && motion && able && (!tall || tall.matches); }
+
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function smooth(v) { v = clamp(v); return v * v * (3 - 2 * v); }
+
+  // the lead's words, each in its own span, in a copy screen readers skip; they read the sentence whole, from a
+  // visually hidden span (a span per word would be a stop per word)
+  function splitLead() {
+    if (heroWords.length) return;
+    var text = heroLead.textContent;
+    var said = document.createElement('span');
+    said.className = 'ov-sr';
+    said.textContent = text;
+    var shown = document.createElement('span');
+    shown.setAttribute('aria-hidden', 'true');
+    var parts = text.split(/(\s+)/);
+    for (var w = 0; w < parts.length; w++) {
+      if (!parts[w]) continue;
+      if (/^\s+$/.test(parts[w])) { shown.appendChild(document.createTextNode(parts[w])); continue; }
+      var word = document.createElement('span');
+      word.className = 'ov-word';
+      word.textContent = parts[w];
+      shown.appendChild(word);
+      heroWords.push(word);
+    }
+    heroLead.textContent = '';
+    heroLead.appendChild(said);
+    heroLead.appendChild(shown);
+  }
+
+  // where an element is laid out in the stage, leaving out any transform on it or around it (the reveals move the lead
+  // and the buttons until they're in)
+  function laidOut(el) {
+    var x = 0, y = 0;
+    for (var e = el; e && e !== heroStage; e = e.offsetParent) { x += e.offsetLeft; y += e.offsetTop; }
+    return { left: x, bottom: y + el.offsetHeight };
+  }
+
+  function unplay() {
+    heroTitle.style.translate = '';
+    heroShot.style.translate = heroShot.style.scale = '';
+    for (var w = 0; w < heroWords.length; w++) heroWords[w].style.opacity = heroWords[w].style.translate = '';
+    for (var b = 0; b < heroButtons.length; b++) {
+      heroButtons[b].style.opacity = heroButtons[b].style.scale = heroButtons[b].style.pointerEvents = '';
+    }
+  }
+
+  // measures the laid-out hero and works out where the screen starts; then shows the scene where the page is now
+  function stageScene() {
+    if (!heroReady) return;
+    var on = wanted();
+    staged.width = document.documentElement.clientWidth;
+    staged.height = document.documentElement.clientHeight;
+    unplay();
+    hero.classList.toggle('ov-scene', on);
+    if (!on) {
+      scene = null;
+      hero.style.removeProperty('--scene');
+      return;
+    }
+    splitLead();
+    var pin = parseFloat(getComputedStyle(heroStage).top) || 0; // the header's height: the stage holds still under it
+    var stage = heroStage.getBoundingClientRect();
+    var shot = heroShot.getBoundingClientRect();
+    var title = heroTitle.getBoundingClientRect();
+    var side = heroSide.getBoundingClientRect();
+    var high = document.documentElement.clientHeight || window.innerHeight; // not the pinch-zoomed view
+    var beside = side.left > title.left + 40; // the lead beside the headline, not under it
+    var lift = 0;
+    var left, top, size;
+    // where things stand in the window when the scene starts (the stage just under the header): y - stage.top + pin
+    if (beside) {
+      // the headline's middle at 43% of the window under the header, as on the share card
+      lift = Math.max(0, Math.min(pin + (high - pin) * 0.43 - title.height / 2 - (title.top - stage.top + pin), high * 0.25));
+      left = side.left;
+      top = title.top + lift;
+      // big enough to run off the bottom of the window
+      size = Math.min(Math.max((high - (top - stage.top + pin)) * 1.06 / shot.height, 0.9), 1.3);
+    } else {
+      left = shot.left + shot.width * 0.42;
+      top = side.top;
+      size = Math.min(Math.max((high - (top - stage.top + pin)) * 0.95 / shot.height, 1), 1.2);
+    }
+    // The screen's top edge travels from top down to where it's laid out as the scene runs (0 to 1). The words come in
+    // in reading order, each no sooner than that edge has passed below it (with room for its little rise), and the
+    // buttons (which pop in place) once the edge has passed them too, so nothing ever shows over the screen. Everything
+    // is in before the end.
+    var from = top - stage.top;
+    var reach = Math.max(shot.top - stage.top - from, 1);
+    var rise = parseFloat(getComputedStyle(heroLead).fontSize) * 0.45 + 4;
+    var words = [];
+    for (var w = 0; w < heroWords.length; w++) {
+      var clear = clamp((laidOut(heroWords[w]).bottom + rise - from) / reach);
+      words.push(Math.min(Math.max(clear, 0.05 + 0.45 * w / heroWords.length), 0.86));
+    }
+    var last = 0;
+    for (var b = 0; b < heroButtons.length; b++) last = Math.max(last, laidOut(heroButtons[b]).bottom + 4);
+    var length = Math.round(high * (beside ? 1.15 : 1));
+    hero.style.setProperty('--scene', length + 'px');
+    scene = {
+      start: hero.getBoundingClientRect().top + (window.scrollY || window.pageYOffset) - pin,
+      length: length, lift: lift, dx: left - shot.left, dy: top - shot.top, size: size,
+      words: words, buttons: Math.min(clamp((last - from) / reach), 0.9 - 0.04 * (heroButtons.length - 1)),
+    };
+    playScene();
+  }
+
+  function playScene() {
+    if (!scene) return;
+    var p = clamp(((window.scrollY || window.pageYOffset) - scene.start) / scene.length);
+    // how far the screen has come: with the scrolling all the way, a little softer at the very start and end
+    var f = 0.5 * p + 0.5 * smooth(p);
+    heroTitle.style.translate = scene.lift ? '0 ' + (scene.lift * (1 - smooth(p / 0.3))).toFixed(1) + 'px' : '';
+    heroShot.style.translate = (scene.dx * (1 - f)).toFixed(1) + 'px ' + (scene.dy * (1 - f)).toFixed(1) + 'px';
+    heroShot.style.scale = (scene.size + (1 - scene.size) * f).toFixed(4);
+    for (var w = 0; w < heroWords.length; w++) {
+      var lit = clamp((f - scene.words[w]) / 0.1);
+      heroWords[w].style.opacity = lit.toFixed(3);
+      heroWords[w].style.translate = '0 ' + ((1 - lit) * 0.4).toFixed(3) + 'em';
+    }
+    for (var b = 0; b < heroButtons.length; b++) {
+      var focused = false;
+      try { focused = heroButtons[b].matches(':focus-visible'); } catch (e) { focused = false; }
+      var pop = focused ? 1 : smooth((f - scene.buttons - 0.04 * b) / 0.1);
+      heroButtons[b].style.opacity = pop.toFixed(3);
+      heroButtons[b].style.scale = (0.92 + 0.08 * pop).toFixed(4);
+      heroButtons[b].style.pointerEvents = pop > 0.5 ? '' : 'none';
+    }
+  }
+
+  if (heroReady) {
+    heroSide.addEventListener('focusin', function (event) {
+      if (!scene) return;
+      var keyboard = true;
+      try { keyboard = event.target.matches(':focus-visible'); } catch (e) { keyboard = true; }
+      if (!keyboard) return;
+      var end = Math.ceil(scene.start + scene.length);
+      if ((window.scrollY || window.pageYOffset) < end) {
+        try { window.scrollTo({ top: end, behavior: 'instant' }); } catch (e) { window.scrollTo(0, end); }
+      }
+      playScene();
+    });
+    heroSide.addEventListener('focusout', function () { soon(); });
+  }
+
+  // Reduce Motion turned on with the page open: everything stops moving and the hero is laid out
+  var calm = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function stillness() {
+    if (!calm || !calm.matches || !motion) return;
+    motion = false;
+    root.classList.remove('ov-motion', 'ov-live');
+    for (var d = 0; d < drifting.length; d++) drifting[d].style.removeProperty('--shift');
+    drifting = [];
+    stageScene();
+    soon();
+  }
+  if (calm && calm.addEventListener) calm.addEventListener('change', stillness);
+  else if (calm && calm.addListener) calm.addListener(stillness);
+
   // ---- scrolling
 
   var header = document.querySelector('.ov-top');
@@ -206,6 +393,7 @@
   function update() {
     waiting = false;
     if (header) header.classList.toggle('is-scrolled', (window.scrollY || window.pageYOffset) > 2);
+    playScene();
     drift();
     follow();
   }
@@ -215,8 +403,17 @@
     window.requestAnimationFrame(update);
   }
   window.addEventListener('scroll', soon, { passive: true });
-  window.addEventListener('resize', function () { measure(); soon(); });
-  window.addEventListener('load', function () { measure(); soon(); });
+  // a new width, a different window, or the scene coming or going re-measures it; a phone's address bar showing or
+  // hiding (a little height) doesn't, so the page doesn't shift under a finger
+  window.addEventListener('resize', function () {
+    var html = document.documentElement;
+    if (html.clientWidth !== staged.width || Math.abs(html.clientHeight - staged.height) > 150 || wanted() !== Boolean(scene)) stageScene();
+    measure();
+    soon();
+  });
+  window.addEventListener('load', function () { stageScene(); measure(); soon(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { stageScene(); soon(); });
+  stageScene();
   measure();
   update();
 })();

@@ -48,8 +48,11 @@
 </header>
 
 <main>
+  <!-- The hero. With motion on (site.js), it opens like the share card: the headline on the left and the screen on the
+       right, running off the window's edge; then, while the runway scrolls by, the stage holds still as the screen
+       comes to the middle and the lead and the buttons come in where it was. Laid out as it is here otherwise. -->
   <section class="ov-hero" aria-labelledby="ov-hero-title">
-    <div class="ov-wrap">
+    <div class="ov-wrap ov-hero-stage">
       <div class="ov-intro">
         <h1 id="ov-hero-title" class="ov-display"><span class="ov-line" data-reveal>Build your company’s own AI.</span> <span class="ov-line ov-hero-line" data-reveal style="--d:.12s">No code.</span></h1>
         <div class="ov-intro-side">
@@ -61,7 +64,7 @@
         </div>
       </div>
       <!-- Real Heura Studios screens, made with a sample AI for a made-up shop. One for each appearance. The screen
-           rises out of its panel once on load, then drifts a little as the page scrolls. -->
+           rises out of its panel once on load (and, without the scene, drifts a little as the page scrolls). -->
       <div class="ov-panel ov-shot" data-reveal="window" style="--d:.3s">
         <div class="ov-shot-img" data-parallax>
           <img class="ov-for-light" src="/img/studio-overview-light.webp" width="2000" height="1250" loading="lazy" decoding="async"
@@ -71,6 +74,7 @@
         </div>
       </div>
     </div>
+    <div class="ov-hero-runway" aria-hidden="true"></div>
   </section>
 
   <section class="ov-section" id="how" aria-labelledby="ov-how-title">

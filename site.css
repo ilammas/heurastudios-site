@@ -164,7 +164,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 /* ---- hero: the headline on the page's left edge, the lead and the buttons beside it, then Heura Studios itself */
-.ov-hero { padding-top: clamp(40px, 7vw, 104px); }
+.ov-hero-stage { padding-top: clamp(40px, 7vw, 104px); }
 .ov-intro {
   display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   column-gap: clamp(32px, 5vw, 80px); align-items: end;
@@ -179,6 +179,20 @@ button, input { font: inherit; color: inherit; }
   .ov-intro { grid-template-columns: minmax(0, 1fr); }
   .ov-intro-side { margin-top: 20px; }
 }
+/* the hero's scene (site.js turns it on with motion, in a window at least 560px tall): the stage holds still under the
+   header while the runway after it scrolls by, and site.js moves the screen and brings in the lead's words and the
+   buttons as it goes, with translate, scale and opacity (the reveals transition none of them). The hero clips what
+   runs off the window's right edge, so nothing scrolls sideways; clip, unlike hidden, leaves the stage free to stick.
+   A button that hasn't come in yet takes no clicks. */
+.ov-hero-runway { height: 0; }
+.ov-scene { overflow-x: clip; }
+.ov-scene .ov-hero-stage { position: sticky; top: calc(var(--header) + 1px); } /* under the header and its rule */
+.ov-scene .ov-hero-runway { height: var(--scene, 0px); }
+.ov-scene .ov-intro { position: relative; z-index: 1; }
+.ov-scene .ov-shot { transform-origin: 0 0; will-change: translate, scale; }
+.ov-word { display: inline-block; }
+/* read by screen readers, not shown: the lead's sentence, whole, beside the words the scene brings in */
+.ov-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
 /* ---- sections */
 .ov-section { margin-top: clamp(96px, 11vw, 168px); scroll-margin-top: calc(var(--header) + 32px); }
@@ -373,6 +387,9 @@ button, input { font: inherit; color: inherit; }
 
 @media print {
   .ov-motion [data-reveal], .ov-motion [data-reveal] .ov-shot-img { opacity: 1 !important; transform: none !important; }
+  .ov-scene .ov-hero-stage { position: static; }
+  .ov-scene .ov-hero-runway { height: 0; }
+  .ov-scene h1, .ov-scene .ov-shot, .ov-scene .ov-word, .ov-scene .ov-btn { opacity: 1 !important; translate: none !important; scale: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
