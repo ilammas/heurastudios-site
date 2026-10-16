@@ -35,16 +35,25 @@ async function fill(page, email, company) {
   await page.getByRole('button', { name: 'Join waitlist' }).click();
 }
 
-test('every call to action on the home page is Join waitlist and goes to the waitlist page', async () => {
-  const { page, errors, close } = await open('/');
-  const links = page.getByRole('link', { name: 'Join waitlist' });
-  assert.ok(await links.count() >= 3, 'header, hero and the closing band');
-  for (const href of await links.evaluateAll(as => as.map(a => a.getAttribute('href')))) assert.equal(href, '/waitlist/');
-  const text = await page.evaluate(() => document.body.innerText);
-  assert.doesNotMatch(text, /early access|store/i);
-  assert.equal(await page.locator('a[href^="mailto:"]').evaluateAll(as => as.filter(a => /waitlist/i.test(a.textContent)).length), 0);
-  assert.deepEqual(errors, []);
-  await close();
+// Launch (Ryan, Oct 14, 2026): the app is open to anyone at app.heurastudios.com, so every call to action is Get started
+// (sign up there) beside a Log in link, on the home page and both legal pages. The waitlist page stays for anyone
+// who follows an old link.
+const APP = 'https://app.heurastudios.com';
+test('every call to action is Get started at app.heurastudios.com, with Log in beside it', async () => {
+  for (const path of ['/', '/privacy/', '/terms/']) {
+    const { page, errors, close } = await open(path);
+    const starts = page.getByRole('link', { name: 'Get started' });
+    assert.ok(await starts.count() >= (path === '/' ? 3 : 1), `${path}: header, hero and the closing band`);
+    for (const href of await starts.evaluateAll(as => as.map(a => a.getAttribute('href')))) assert.equal(href, `${APP}/signup`, path);
+    const logins = page.locator('header').getByRole('link', { name: 'Log in' });
+    assert.equal(await logins.count(), 1, `${path}: Log in in the header`);
+    assert.equal(await logins.getAttribute('href'), `${APP}/login`, path);
+    assert.equal(await page.getByRole('link', { name: 'Join waitlist' }).count(), 0, `${path}: no waitlist buttons`);
+    const text = await page.evaluate(() => document.body.innerText);
+    if (path === '/') assert.doesNotMatch(text, /early access|store/i, path);   // the home page's copy; the legal text says both
+    assert.deepEqual(errors, [], path);
+    await close();
+  }
 });
 
 test('"Email the founders" writes to Ryan, Leo and Ethan, on both pages', async () => {

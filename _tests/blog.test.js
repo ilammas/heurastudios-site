@@ -145,6 +145,23 @@ test('every page links to the blog from its header and its footer', async () => 
   }
 });
 
+// Launch: the blog's header and footer match every other page's, with Get started and Log in at app.heurastudios.com.
+const APP = 'https://app.heurastudios.com';
+test('the blog has Get started and Log in at app.heurastudios.com, like every other page', async () => {
+  for (const p of ['/blog/', POST, SMB]) {
+    const { page, errors, close } = await open(p);
+    const starts = page.getByRole('link', { name: 'Get started' });
+    assert.equal(await starts.count(), 2, `${p}: in the header and the footer`);
+    for (const href of await starts.evaluateAll(as => as.map(a => a.getAttribute('href')))) assert.equal(href, `${APP}/signup`, p);
+    const logins = page.getByRole('link', { name: 'Log in' });
+    assert.equal(await logins.count(), 2, `${p}: in the header and the footer`);
+    for (const href of await logins.evaluateAll(as => as.map(a => a.getAttribute('href')))) assert.equal(href, `${APP}/login`, p);
+    assert.equal(await page.getByRole('link', { name: 'Join waitlist' }).count(), 0, `${p}: no waitlist buttons`);
+    assert.deepEqual(errors, [], p);
+    await close();
+  }
+});
+
 test('the blog fits a phone, in light and dark', async () => {
   for (const colorScheme of ['light', 'dark']) {
     for (const p of ['/blog/', POST, SMB]) {
