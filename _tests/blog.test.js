@@ -15,6 +15,11 @@ const PDF = '/reports/heura-eval-004.pdf';
 const TITLE = 'Heura Eval 004: Arche 0.19 vs 0.20 vs 0.21';
 const SUMMARY = 'Arche 0.21 more than doubles both business benchmarks and keeps nearly all of 0.20’s learning from ' +
   'taught answers. What changed, what we saw in the Studio, and what isn’t scored yet.';
+// the second post (Ryan, Oct 15, 2026): a note for small business owners, without a report
+const SMB = '/blog/why-heura-studios-fits-small-business/';
+const SMB_TITLE = 'Your business, your computer, your assistant: why Heura Studios fits small business';
+const SMB_SUMMARY = 'Most AI assistants ask you to hand your documents and customer conversations to someone else’s ' +
+  'servers. Heura Studios can run on your own computer, learns your business, and lets you check it before customers see it.';
 
 async function open(p, options = {}) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 860 }, ...options });
@@ -31,13 +36,21 @@ test('the blog lists the posts, newest first, each with its date, summary and re
   assert.equal(await page.title(), 'Blog – Heura Studios');
   assert.equal(await page.getByRole('heading', { level: 1 }).textContent(), 'Blog');
   assert.equal(await page.locator('.bl-lead').textContent(), 'Model reports and notes from the Heura Studios team.');
+  const hrefs = await page.locator('.bl-list > li h2 a').evaluateAll(as => as.map(a => a.getAttribute('href')));
+  assert.deepEqual(hrefs, [SMB, POST]);
   const first = page.locator('.bl-list > li').first();
-  assert.equal(await first.locator('time').textContent(), 'October 14, 2026');
-  assert.equal(await first.locator('time').getAttribute('datetime'), '2026-10-14');
-  const link = first.getByRole('link', { name: TITLE });
+  assert.equal(await first.locator('time').textContent(), 'October 15, 2026');
+  assert.equal(await first.locator('time').getAttribute('datetime'), '2026-10-15');
+  assert.equal(await first.getByRole('link', { name: SMB_TITLE }).getAttribute('href'), SMB);
+  assert.equal(await first.locator('.bl-summary').textContent(), SMB_SUMMARY);
+  assert.equal(await first.locator('.bl-report').count(), 0, 'a post without a report has no report link');
+  const second = page.locator('.bl-list > li').nth(1);
+  assert.equal(await second.locator('time').textContent(), 'October 14, 2026');
+  assert.equal(await second.locator('time').getAttribute('datetime'), '2026-10-14');
+  const link = second.getByRole('link', { name: TITLE });
   assert.equal(await link.getAttribute('href'), POST);
-  assert.equal(await first.locator('.bl-summary').textContent(), SUMMARY);
-  assert.equal(await first.getByRole('link', { name: 'Report (PDF)' }).getAttribute('href'), PDF);
+  assert.equal(await second.locator('.bl-summary').textContent(), SUMMARY);
+  assert.equal(await second.getByRole('link', { name: 'Report (PDF)' }).getAttribute('href'), PDF);
   const dates = await page.locator('.bl-list time').evaluateAll(ts => ts.map(t => t.getAttribute('datetime')));
   assert.deepEqual(dates, [...dates].sort().reverse(), 'newest first');
   assert.deepEqual(errors, []);
@@ -72,6 +85,43 @@ test('a post: its title, byline, the report to download, the scorecard and the w
   await close();
 });
 
+test('the small-business post: its title, byline, sections, the jobs, the footnote and the way to the waitlist', async () => {
+  const { page, errors, status, close } = await open(SMB);
+  assert.equal(status, 200);
+  assert.equal(await page.title(), `${SMB_TITLE} – Heura Studios`);
+  assert.equal(await page.getByRole('heading', { level: 1 }).textContent(), SMB_TITLE);
+  assert.equal(await page.locator('.bl-byline').innerText(), 'October 15, 2026, by the Ostravanne team');
+  assert.equal(await page.locator('.bl-download').count(), 0, 'no report to download');
+  assert.deepEqual(await page.locator('.bl-post h2').allTextContents(), [
+    '1. It can run on your own computer', '2. It learns your business, not the internet’s',
+    '3. It can take on the backend busywork', '4. You can check it before customers see it', '5. You’re not locked in',
+    '6. Your data is not our product', '7. Simple, predictable cost', 'An honest note on who it’s for',
+    'What to expect from the first month', 'Join the waitlist']);
+  assert.equal(await page.locator('.bl-post h2 em').textContent(), 'your');
+  assert.deepEqual(await page.locator('.bl-post ul > li > strong').allTextContents(), ['Checking invoices:',
+    'Reorder decisions:', 'Ticket routing:', 'Customer list cleanup:', 'Reports without the risk:', 'Deadlines:',
+    'Approval checks:']);
+  assert.deepEqual(await page.locator('.bl-post ol > li > strong').allTextContents(),
+    ['Pick one job', 'Add your documents and rules', 'Run the exam', 'Switch it on']);
+  assert.deepEqual(await page.locator('.bl-post p > strong').allTextContents(),
+    ['How we keep it dependable.', 'What it isn’t.']);
+  const text = await page.locator('.bl-post').innerText();
+  assert.match(text, /small enough to run on a laptop\*\. When you run it/);
+  assert.match(text, /\*Runs on modest hardware, for example an integrated GPU with 12 execution units \(EUs\), a 200 MHz base clock boosting to 650–700 MHz/);
+  assert.match(text, /Training may require better specs, but you can do it on something like a MacBook Pro\./);
+  assert.match(text, /use your API keys for Claude or ChatGPT and we will cover your tokens/);
+  assert.doesNotMatch(text, /FIX THIS|\[ ?FIX/i, 'the draft’s note to the team stays out of the post');
+  assert.equal(await page.locator('.bl-post').getByRole('link', { name: 'Join the waitlist' }).getAttribute('href'), '/waitlist/');
+  assert.equal(await page.getByRole('link', { name: 'All posts' }).getAttribute('href'), '/blog/');
+  const meta = async sel => page.locator(sel).getAttribute('content');
+  assert.equal(await meta('meta[name="description"]'), SMB_SUMMARY);
+  assert.equal(await meta('meta[property="og:type"]'), 'article');
+  assert.equal(await meta('meta[property="og:url"]'), 'https://heurastudios.com' + SMB);
+  assert.equal(await meta('meta[property="og:title"]'), SMB_TITLE);
+  assert.deepEqual(errors, []);
+  await close();
+});
+
 test('the report PDF is served as it is', async () => {
   const res = await fetch(server.url + PDF);
   assert.equal(res.status, 200);
@@ -82,7 +132,7 @@ test('the report PDF is served as it is', async () => {
 });
 
 test('every page links to the blog from its header and its footer', async () => {
-  for (const p of ['/', '/privacy/', '/terms/', '/waitlist/', '/blog/', POST]) {
+  for (const p of ['/', '/privacy/', '/terms/', '/waitlist/', '/blog/', POST, SMB]) {
     const { page, close } = await open(p);
     const header = await page.locator('header nav a').evaluateAll(as => as.map(a => [a.textContent.trim(), a.getAttribute('href')]));
     assert.deepEqual(header[header.length - 1], ['Blog', '/blog/'], `${p} header`);
@@ -97,7 +147,7 @@ test('every page links to the blog from its header and its footer', async () => 
 
 test('the blog fits a phone, in light and dark', async () => {
   for (const colorScheme of ['light', 'dark']) {
-    for (const p of ['/blog/', POST]) {
+    for (const p of ['/blog/', POST, SMB]) {
       const { page, close } = await open(p, { viewport: { width: 375, height: 800 }, colorScheme });
       const wide = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       assert.ok(wide <= 0, `${p} (${colorScheme}) scrolls sideways by ${wide}px`);
@@ -120,7 +170,8 @@ function published(dir, rel = '') {
 }
 
 test('building the site changes no page that isn’t the blog’s', () => {
-  const own = new Set(['blog/index.html', path.join('blog', 'heura-eval-004', 'index.html')]);
+  const own = new Set(['blog/index.html', path.join('blog', 'heura-eval-004', 'index.html'),
+    path.join('blog', 'why-heura-studios-fits-small-business', 'index.html')]);
   const files = published(site).filter(f => !own.has(f));
   assert.ok(files.includes('index.html') && files.includes(path.join('privacy', 'index.html')));
   for (const f of files) {
@@ -130,7 +181,8 @@ test('building the site changes no page that isn’t the blog’s', () => {
 
 test('the repo’s own files aren’t published', async () => {
   for (const p of ['/docs/superpowers/specs/2026-10-15-blog-design.md', '/README.md', '/README.html', '/_config.yml',
-    '/_posts/2026-10-14-heura-eval-004.md', '/_layouts/post.html', '/_tests/helpers.js', '/_backend/core.js']) {
+    '/_posts/2026-10-14-heura-eval-004.md', '/_posts/2026-10-15-why-heura-studios-fits-small-business.md',
+    '/_layouts/post.html', '/_tests/helpers.js', '/_backend/core.js']) {
     assert.equal((await fetch(server.url + p)).status, 404, p);
   }
   assert.ok(!fs.existsSync(path.join(site, 'docs')), 'docs/ stays out of the site');
