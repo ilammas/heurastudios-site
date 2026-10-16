@@ -85,7 +85,7 @@ test('a post: its title, byline, the report to download, the scorecard and the w
   await close();
 });
 
-test('the small-business post: its title, byline, sections, the jobs, the footnote and the way to the waitlist', async () => {
+test('the small-business post: its title, byline, sections, the jobs, the footnote and how to get started', async () => {
   const { page, errors, status, close } = await open(SMB);
   assert.equal(status, 200);
   assert.equal(await page.title(), `${SMB_TITLE} – Heura Studios`);
@@ -96,7 +96,7 @@ test('the small-business post: its title, byline, sections, the jobs, the footno
     '1. It can run on your own computer', '2. It learns your business, not the internet’s',
     '3. It can take on the backend busywork', '4. You can check it before customers see it', '5. You’re not locked in',
     '6. Your data is not our product', '7. Simple, predictable cost', 'An honest note on who it’s for',
-    'What to expect from the first month', 'Join the waitlist']);
+    'What to expect from the first month', 'Get started']);
   assert.equal(await page.locator('.bl-post h2 em').textContent(), 'your');
   assert.deepEqual(await page.locator('.bl-post ul > li > strong').allTextContents(), ['Checking invoices:',
     'Reorder decisions:', 'Ticket routing:', 'Customer list cleanup:', 'Reports without the risk:', 'Deadlines:',
@@ -111,7 +111,13 @@ test('the small-business post: its title, byline, sections, the jobs, the footno
   assert.match(text, /Training may require better specs, but you can do it on something like a MacBook Pro\./);
   assert.match(text, /use your API keys for Claude or ChatGPT and we will cover your tokens/);
   assert.doesNotMatch(text, /FIX THIS|\[ ?FIX/i, 'the draft’s note to the team stays out of the post');
-  assert.equal(await page.locator('.bl-post').getByRole('link', { name: 'Join the waitlist' }).getAttribute('href'), '/waitlist/');
+  // it ends with Get started since the app opened (Ryan picked the ending, Oct 15, 23:10)
+  const post = page.locator('.bl-post');
+  assert.equal(await post.getByRole('link', { name: 'Get started' }).getAttribute('href'), 'https://app.heurastudios.com/signup');
+  assert.equal(await post.getByRole('link', { name: 'email the founders' }).getAttribute('href'),
+    'mailto:ryantian@ostravanne.com,leoli@ostravanne.com,ethanwang@ostravanne.com');
+  assert.match(text, /Heura Studios is open\. Get started with one job\. And tell us what you.d want your assistant to do: email the founders\. We read every email\./);
+  assert.doesNotMatch(text, /not open yet|waitlist/i, 'no waitlist now that it’s open');
   assert.equal(await page.getByRole('link', { name: 'All posts' }).getAttribute('href'), '/blog/');
   const meta = async sel => page.locator(sel).getAttribute('content');
   assert.equal(await meta('meta[name="description"]'), SMB_SUMMARY);
@@ -150,10 +156,10 @@ const APP = 'https://app.heurastudios.com';
 test('the blog has Get started and Log in at app.heurastudios.com, like every other page', async () => {
   for (const p of ['/blog/', POST, SMB]) {
     const { page, errors, close } = await open(p);
-    const starts = page.getByRole('link', { name: 'Get started' });
+    const starts = page.locator('header, footer').getByRole('link', { name: 'Get started' });   // a post may have its own
     assert.equal(await starts.count(), 2, `${p}: in the header and the footer`);
     for (const href of await starts.evaluateAll(as => as.map(a => a.getAttribute('href')))) assert.equal(href, `${APP}/signup`, p);
-    const logins = page.getByRole('link', { name: 'Log in' });
+    const logins = page.locator('header, footer').getByRole('link', { name: 'Log in' });
     assert.equal(await logins.count(), 2, `${p}: in the header and the footer`);
     for (const href of await logins.evaluateAll(as => as.map(a => a.getAttribute('href')))) assert.equal(href, `${APP}/login`, p);
     assert.equal(await page.getByRole('link', { name: 'Join waitlist' }).count(), 0, `${p}: no waitlist buttons`);
