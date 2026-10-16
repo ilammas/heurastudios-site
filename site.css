@@ -146,9 +146,22 @@ button, input { font: inherit; color: inherit; }
   font-size: 15px; color: var(--ink-2); transition: color .15s ease;
 }
 @media (hover: hover) { .ov-nav a:hover { color: var(--ink); } }
+.ov-nav-login {
+  display: inline-flex; align-items: center; flex: none; min-height: 44px; padding: 0 12px; margin-left: -12px; border-radius: 8px;
+  font-size: 15px; font-weight: 500; color: var(--ink); white-space: nowrap;
+}
 .ov-top-row > .ov-btn { flex: none; }
 @media (max-width: 759px) {
   .ov-nav { display: none; }
+  .ov-nav-login { margin-left: auto; }
+  .ov-top-row > .ov-btn { margin-left: 0; }
+}
+@media (max-width: 419px) {   /* a phone: the logo, Log in and Get started share 360 px */
+  .ov-top-row { gap: 10px; }
+  .ov-nav-login { padding: 0 6px; margin-right: -6px; }
+}
+@media (max-width: 359px) {   /* the narrowest phones: Log in stays in the footer */
+  .ov-nav-login { display: none; }
   .ov-top-row > .ov-btn { margin-left: auto; }
 }
 
