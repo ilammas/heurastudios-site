@@ -1,302 +1,145 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Heura Studios</title>
-<meta name="description" content="Build your company's own AI. No code. Heura Studios turns the documents you already have into an assistant for your customers or your team.">
-<meta name="theme-color" content="#ffffff" data-light="#ffffff" data-dark="#000000">
-<!-- Set before anything paints: the appearance (the one picked under Appearance at the foot of the page, else the
-     system's), and ov-motion when things may move as they come into view (not with Reduce Motion). -->
-<script>(function(d){var t,m,w=window;try{t=localStorage.getItem('ov-theme')}catch(e){}if(t!=='light'&&t!=='dark')t=w.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';d.setAttribute('data-theme',t);d.classList.add('ov-js');if(w.matchMedia&&matchMedia('(prefers-reduced-motion: no-preference)').matches&&'IntersectionObserver'in w)d.classList.add('ov-motion');m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',m.getAttribute('data-'+t))})(document.documentElement)</script>
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
-<link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Heura Studios">
-<meta property="og:url" content="https://heurastudios.com/">
-<meta property="og:title" content="Heura Studios">
-<meta property="og:description" content="Build your company's own AI. No code.">
-<meta property="og:image" content="https://heurastudios.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Heura Studios. Build your company’s own AI. No code. Beside it, the Overview screen in Heura Studios.">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Heura Studios">
-<meta name="twitter:description" content="Build your company's own AI. No code.">
-<meta name="twitter:image" content="https://heurastudios.com/og-image.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Heura Studios","alternateName":"heurastudios.com","url":"https://heurastudios.com/"}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=Newsreader:opsz,wght@6..72,300..600&display=swap">
-<link rel="stylesheet" href="/site.css">
-<script src="/site.js" defer></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heura Arche – Live Demo</title>
+<style>
+:root{--bg:#faf8f5;--card:#fff;--text:#1d1b19;--mute:#6b665f;--line:#e6e1d9;--accent:#c2410c;--accent2:#fff1e8;--ok:#15803d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161412;--card:#201d1a;--text:#f1ede7;--mute:#a09a91;--line:#35302b;--accent:#fb923c;--accent2:#2c211a;--ok:#4ade80}}
+:root[data-theme="dark"]{--bg:#161412;--card:#201d1a;--text:#f1ede7;--mute:#a09a91;--line:#35302b;--accent:#fb923c;--accent2:#2c211a;--ok:#4ade80}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:28px;margin:0 0 4px}h2{font-size:18px;margin:0 0 12px}
+.sub{color:var(--mute);margin:0 0 20px}
+.banner{background:var(--accent2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:14px;margin:0}
+.kv dt{color:var(--mute)}.kv dd{margin:0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;cursor:pointer}
+.tab{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:14px}
+.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chat{height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg);font-size:14px}
+.msg{margin:0 0 10px;max-width:92%}.u{margin-left:auto;background:var(--accent);color:#fff;padding:8px 12px;border-radius:12px 12px 2px 12px;width:fit-content}
+.a{background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:12px 12px 12px 2px}
+pre{margin:8px 0 0;padding:10px;background:var(--bg);border:1px solid var(--line);border-radius:8px;overflow-x:auto;font-size:12.5px}
+.row{display:flex;gap:8px;margin-top:10px}
+input{flex:1;font:inherit;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--text);min-width:0}
+.go{padding:9px 16px;border-radius:8px;border:0;background:var(--accent);color:#fff}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.bar{margin:10px 0}.bar .l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
+.track{height:10px;background:var(--line);border-radius:6px;overflow:hidden}.fill{height:100%;background:var(--accent);border-radius:6px}.fill.alt{background:var(--mute)}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mute);font-weight:600}
+.ok{color:var(--ok);font-weight:600}
+small{color:var(--mute)}
+</style>
 </head>
 <body>
-<header class="ov-top">
-  <div class="ov-wrap ov-top-row">
-    <a class="ov-logo" href="/"><span class="ov-mark" aria-hidden="true"></span>Heura Studios</a>
-    <nav class="ov-nav" aria-label="Sections">
-      <a href="#how">How it works</a>
-      <a href="#kits">Starter kits</a>
-      <a href="#models">Models</a>
-      <a href="/blog/">Blog</a>
-    </nav>
-    <a class="ov-nav-login" href="https://app.heurastudios.com/login">Log in</a>
-    <a class="ov-btn ov-btn-primary ov-btn-small" href="https://app.heurastudios.com/signup">Get started</a>
-  </div>
-</header>
+<div class="wrap">
+  <h1>Heura Arche <small>by Heura Studios</small></h1>
+  <p class="sub">An AI engineer that runs on your own computer. Try it on a sample business below.</p>
+  <div class="banner"><strong>Demo data.</strong> Brightloaf Bakery is a fictional company and all benchmark figures are illustrative placeholders, not measured Heura Arche results. Replace them with real numbers before publishing.</div>
 
-<main>
-  <!-- The hero. With motion on (site.js), it opens like the share card: the headline on the left and the screen on the
-       right, running off the window's edge; then, while the runway scrolls by, the stage holds still as the screen
-       comes to the middle and the lead and the buttons come in where it was. Laid out as it is here otherwise. -->
-  <section class="ov-hero" aria-labelledby="ov-hero-title">
-    <div class="ov-wrap ov-hero-stage">
-      <div class="ov-intro">
-        <h1 id="ov-hero-title" class="ov-display"><span class="ov-line" data-reveal>Build your company’s own AI.</span> <span class="ov-line ov-hero-line" data-reveal style="--d:.12s">No code.</span></h1>
-        <div class="ov-intro-side">
-          <p class="ov-lead ov-hero-lead" data-reveal style="--d:.24s">Heura Studios turns the documents, rules and answers you already have into an assistant for your customers or your team. Teach it, test it, then put it on your website.</p>
-          <div class="ov-actions" data-reveal style="--d:.34s">
-            <a class="ov-btn ov-btn-primary" href="https://app.heurastudios.com/signup">Get started</a>
-            <a class="ov-btn ov-btn-quiet" href="#how">See how it works</a>
-          </div>
-        </div>
-      </div>
-      <!-- Real Heura Studios screens, made with a sample AI for a made-up shop. One for each appearance. The screen
-           rises out of its panel once on load (and, without the scene, drifts a little as the page scrolls). -->
-      <div class="ov-panel ov-shot" data-reveal="window" style="--d:.3s">
-        <div class="ov-shot-img" data-parallax>
-          <img class="ov-for-light" src="/img/studio-overview-light.webp" width="2000" height="1250" loading="lazy" decoding="async"
-            alt="The Overview tab in Heura Studios for Fernbrook Support, a sample AI for a made-up shop: its numbers, a checklist that shows it’s been taught 3 documents, 6 instructions and 10 examples and that trying it comes next, and its recent activity.">
-          <img class="ov-for-dark" src="/img/studio-overview-dark.webp" width="2000" height="1250" loading="lazy" decoding="async"
-            alt="The Overview tab in Heura Studios for Fernbrook Support, a sample AI for a made-up shop: its numbers, a checklist that shows it’s been taught 3 documents, 6 instructions and 10 examples and that trying it comes next, and its recent activity.">
-        </div>
-      </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Sample company</h2>
+      <dl class="kv">
+        <dt>Company</dt><dd>Brightloaf Bakery (fictional)</dd>
+        <dt>Industry</dt><dd>Retail bakery &amp; online orders</dd>
+        <dt>Size</dt><dd>12 employees, 2 locations</dd>
+        <dt>Stack</dt><dd>Shopify store, Google Sheets inventory, a CSV export from the POS</dd>
+        <dt>Pain point</dt><dd>No developer on staff; owner patches spreadsheets by hand every week</dd>
+        <dt>Goal</dt><dd>Automate daily reports and fix small website issues without hiring an engineer</dd>
+      </dl>
     </div>
-    <div class="ov-hero-runway" aria-hidden="true"></div>
-  </section>
-
-  <section class="ov-section" id="how" aria-labelledby="ov-how-title">
-    <div class="ov-wrap">
-      <div class="ov-head">
-        <h2 id="ov-how-title" class="ov-h2" data-reveal>How it works</h2>
-        <p class="ov-section-lead" data-reveal style="--d:.08s">Everything happens in Heura Studios, from your first document to a chat on your website. No setup, no code.</p>
-      </div>
-      <div class="ov-tour">
-        <!-- The stage: one Heura Studios screen per step. It stays in view while the steps scroll by, and site.js shows
-             the screen of the step that's level with it. Without JavaScript it shows the first. -->
-        <div class="ov-tour-stage">
-          <div class="ov-panel ov-shot ov-tour-shot is-active" data-step="pick">
-            <div class="ov-shot-img">
-              <img class="ov-for-light" src="/img/studio-pick-light.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="Making a new AI in Heura Studios: picking what it starts from, with Heura Arche available and Asteria and Aniketos coming soon.">
-              <img class="ov-for-dark" src="/img/studio-pick-dark.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="Making a new AI in Heura Studios: picking what it starts from, with Heura Arche available and Asteria and Aniketos coming soon.">
-            </div>
-          </div>
-          <div class="ov-panel ov-shot ov-tour-shot" data-step="teach">
-            <div class="ov-shot-img">
-              <img class="ov-for-light" src="/img/studio-teach-light.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="The Teach tab for the sample AI, with its warranty, shipping FAQ and refund policy live.">
-              <img class="ov-for-dark" src="/img/studio-teach-dark.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="The Teach tab for the sample AI, with its warranty, shipping FAQ and refund policy live.">
-            </div>
-          </div>
-          <div class="ov-panel ov-shot ov-tour-shot" data-step="train">
-            <div class="ov-shot-img">
-              <img class="ov-for-light" src="/img/studio-train-light.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="The Train tab for the sample AI: its lesson counts, 10 example answers waiting to be trained in, and a Train now button.">
-              <img class="ov-for-dark" src="/img/studio-train-dark.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="The Train tab for the sample AI: its lesson counts, 10 example answers waiting to be trained in, and a Train now button.">
-            </div>
-          </div>
-          <!-- The Launch tab, and over it the chat bubble the sample AI puts on a website, as the tab's live preview
-               shows it. The chat pops open when the tour reaches Launch; the bubble opens and closes it, like the
-               real one. -->
-          <div class="ov-panel ov-shot ov-tour-shot ov-chat" data-step="launch">
-            <div class="ov-shot-img">
-              <img class="ov-for-light" src="/img/studio-launch-light.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="The Launch tab for the sample AI: its chat bubble’s title, greeting, color and allowed websites, and a snippet to copy onto a website.">
-              <img class="ov-for-dark" src="/img/studio-launch-dark.webp" width="2000" height="1250" loading="lazy" decoding="async"
-                alt="The Launch tab for the sample AI: its chat bubble’s title, greeting, color and allowed websites, and a snippet to copy onto a website.">
-            </div>
-            <div class="ov-chat-box">
-              <img class="ov-chat-card" src="/img/studio-chat-card.webp" width="840" height="1048" loading="lazy" decoding="async" data-theme-free
-                alt="The sample AI’s chat window on a website, greeting a visitor with “Hi! How can I help?”">
-              <button class="ov-chat-bubble" type="button" aria-expanded="true" aria-label="Close the sample chat" hidden>
-                <svg class="ov-chat-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 12.5a7.5 7.5 0 0 1-11 6.6L4.5 20l1-4A7.5 7.5 0 1 1 20 12.5z"/></svg>
-                <svg class="ov-chat-icon-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <ol class="ov-tour-steps">
-          <li class="ov-tour-step" data-step="pick" aria-current="step">
-            <div class="ov-tour-text" data-reveal>
-              <span class="ov-step-n" aria-hidden="true">1</span>
-              <h3>Pick</h3>
-              <p>Name your AI and pick where it starts: a blank slate, or a kit for support, HR, IT or sales.</p>
-            </div>
-          </li>
-          <li class="ov-tour-step" data-step="teach">
-            <div class="ov-tour-text" data-reveal>
-              <span class="ov-step-n" aria-hidden="true">2</span>
-              <h3>Teach</h3>
-              <p>Drop in your documents, write rules in plain English and add example answers. It uses each one in its very next answer.</p>
-            </div>
-          </li>
-          <li class="ov-tour-step" data-step="train">
-            <div class="ov-tour-text" data-reveal>
-              <span class="ov-step-n" aria-hidden="true">3</span>
-              <h3>Train</h3>
-              <p>Give it an exam to see how ready it is, fix what it gets wrong, then train your lessons right into it.</p>
-            </div>
-          </li>
-          <li class="ov-tour-step" data-step="launch">
-            <div class="ov-tour-text" data-reveal>
-              <span class="ov-step-n" aria-hidden="true">4</span>
-              <h3>Launch</h3>
-              <p>Put a chat bubble on your website, connect your app through an API, or run it on your own computer.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <section class="ov-section" id="kits" aria-labelledby="ov-kits-title">
-    <div class="ov-wrap ov-split">
-      <div class="ov-head">
-        <h2 id="ov-kits-title" class="ov-h2" data-reveal>Starter kits</h2>
-        <p class="ov-section-lead" data-reveal style="--d:.08s">Every kit comes with 3 documents, 6 rules, 10 example answers and 8 test questions. Swap in your own anytime.</p>
-      </div>
-      <ul class="ov-kits" data-reveal="rule">
-        <li class="ov-kit" data-reveal style="--d:.1s">
-          <h3 id="ov-kit-support">Customer support</h3>
-          <ul class="ov-kit-docs" aria-labelledby="ov-kit-support"><li>Refund Policy</li><li>Shipping FAQ</li><li>Warranty</li></ul>
-        </li>
-        <li class="ov-kit" data-reveal style="--d:.18s">
-          <h3 id="ov-kit-hr">HR policy</h3>
-          <ul class="ov-kit-docs" aria-labelledby="ov-kit-hr"><li>Time Off Policy</li><li>Benefits Guide</li><li>Remote Work Policy</li></ul>
-        </li>
-        <li class="ov-kit" data-reveal style="--d:.26s">
-          <h3 id="ov-kit-it">IT helpdesk</h3>
-          <ul class="ov-kit-docs" aria-labelledby="ov-kit-it"><li>Passwords and MFA</li><li>VPN Guide</li><li>Laptop Requests</li></ul>
-        </li>
-        <li class="ov-kit" data-reveal style="--d:.34s">
-          <h3 id="ov-kit-sales">Sales</h3>
-          <ul class="ov-kit-docs" aria-labelledby="ov-kit-sales"><li>Product Sheet</li><li>Pricing</li><li>Objection Handling</li></ul>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="ov-section" id="models" aria-labelledby="ov-models-title">
-    <div class="ov-wrap">
-      <div class="ov-head">
-        <h2 id="ov-models-title" class="ov-h2" data-reveal>Models</h2>
-        <p class="ov-section-lead" data-reveal style="--d:.08s">Under the hood, your AI runs on Heura Arche, a model built on the open Qwen3-VL-2B and fine-tuned for business answers. Use it in Heura Studios or download it to your own computer. Two stronger ones are on the way.</p>
-      </div>
-      <div class="ov-models">
-        <article class="ov-panel ov-model ov-model-main" aria-labelledby="ov-arche" data-reveal="pop">
-          <p class="ov-status is-available" data-status><span class="ov-dot" aria-hidden="true"></span>Available</p>
-          <h3 id="ov-arche" class="ov-model-name">Heura Arche</h3>
-          <p class="ov-model-text">The base model your AI starts from. Small enough to run on a laptop, so your AI can too.</p>
-          <dl class="ov-specs">
-            <div><dt>Size</dt><dd>2B parameters</dd></div>
-            <div><dt>Understands</dt><dd>Text and images</dd></div>
-            <div><dt>Runs on</dt><dd>A laptop</dd></div>
-          </dl>
-        </article>
-        <article class="ov-panel ov-model" aria-labelledby="ov-asteria" data-reveal="pop" style="--d:.1s">
-          <p class="ov-status" data-status>Coming soon</p>
-          <h3 id="ov-asteria" class="ov-model-name">Heura Asteria</h3>
-          <p class="ov-model-text">Four times as powerful as Arche. It runs on a GPU, so you’ll need one.</p>
-        </article>
-        <article class="ov-panel ov-model" aria-labelledby="ov-aniketos" data-reveal="pop" style="--d:.2s">
-          <p class="ov-status" data-status>Coming soon</p>
-          <h3 id="ov-aniketos" class="ov-model-name">Heura Aniketos</h3>
-          <p class="ov-model-text">For long documents and harder questions.</p>
-        </article>
-      </div>
-      <!-- Bring your own: an AI can answer with another model instead, as on the Heura Studios app's Models page. The same
-           list as the starter kits. -->
-      <div class="ov-split ov-byo">
-        <div class="ov-head">
-          <h3 id="ov-byo-title" class="ov-byo-title" data-reveal>Or bring your own</h3>
-          <p class="ov-section-lead" data-reveal style="--d:.08s">Any AI can answer with another model instead, using your company’s own key. Teaching, tests and the chat on your website work the same.</p>
-        </div>
-        <ul class="ov-kits" data-reveal="rule" aria-labelledby="ov-byo-title">
-          <li class="ov-kit" data-reveal style="--d:.1s"><h4>Claude</h4><p class="ov-kit-docs">Anthropic’s models, with your Anthropic key.</p></li>
-          <li class="ov-kit" data-reveal style="--d:.18s"><h4>GPT</h4><p class="ov-kit-docs">OpenAI’s models, with your OpenAI key. GPT can also be trained on your examples.</p></li>
-          <li class="ov-kit" data-reveal style="--d:.26s"><h4>Gemini</h4><p class="ov-kit-docs">Google’s models, with a Google AI Studio key.</p></li>
-          <li class="ov-kit" data-reveal style="--d:.34s"><h4>Your own model</h4><p class="ov-kit-docs">Any model you run with Ollama, LM Studio, vLLM or another OpenAI-compatible server.</p></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="ov-closing" aria-labelledby="ov-closing-title">
-    <div class="ov-wrap ov-intro">
-      <h2 id="ov-closing-title" class="ov-display" data-reveal>Be first in line for the beta.</h2>
-      <div class="ov-intro-side" data-reveal style="--d:.12s">
-        <p class="ov-lead">Get an email when the Heura Studios beta opens.</p>
-        <div class="ov-actions">
-          <a class="ov-btn ov-btn-primary" href="https://app.heurastudios.com/signup">Get started</a>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer class="ov-foot">
-  <div class="ov-wrap">
-    <div class="ov-foot-top">
-      <div>
-        <a class="ov-logo" href="/"><span class="ov-mark" aria-hidden="true"></span>Heura Studios</a>
-      </div>
-      <div class="ov-foot-cols">
-        <nav aria-labelledby="ov-foot-product">
-          <h2 id="ov-foot-product" class="ov-foot-title">Product</h2>
-          <ul>
-            <li><a href="/#how">How it works</a></li>
-            <li><a href="/#kits">Starter kits</a></li>
-            <li><a href="/#models">Models</a></li>
-            <li><a href="https://app.heurastudios.com/signup">Get started</a></li>
-            <li><a href="https://app.heurastudios.com/login">Log in</a></li>
-            <li><a href="/blog/">Blog</a></li>
-          </ul>
-        </nav>
-        <nav aria-labelledby="ov-foot-legal">
-          <h2 id="ov-foot-legal" class="ov-foot-title">Legal</h2>
-          <ul>
-            <li><a href="/privacy/">Privacy Policy</a></li>
-            <li><a href="/terms/">Terms of Service</a></li>
-          </ul>
-        </nav>
-        <div>
-          <h2 class="ov-foot-title">Contact</h2>
-          <ul>
-            <li><a href="mailto:ryantian@ostravanne.com,leoli@ostravanne.com,ethanwang@ostravanne.com">Email the founders</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="ov-foot-bottom">
-      <p>© 2026 Ostravanne</p>
-      <div class="ov-appearance">
-        <span id="ov-appearance-label">Appearance</span>
-        <div class="ov-seg" role="radiogroup" aria-labelledby="ov-appearance-label">
-          <label><input type="radio" name="ov-appearance" value="system" checked><span>System</span></label>
-          <label><input type="radio" name="ov-appearance" value="light"><span>Light</span></label>
-          <label><input type="radio" name="ov-appearance" value="dark"><span>Dark</span></label>
-        </div>
-      </div>
+    <div class="card">
+      <h2>Why it fits</h2>
+      <dl class="kv">
+        <dt>Runs on</dt><dd>Owner's own laptop, no data leaves the machine</dd>
+        <dt>Typical tasks</dt><dd>Scripts, report automation, small site fixes</dd>
+        <dt>Cost (sample)</dt><dd>One-time setup vs. a salaried engineer</dd>
+      </dl>
     </div>
   </div>
-</footer>
+
+  <div class="card">
+    <h2>Try Heura Arche on Brightloaf's tasks</h2>
+    <div class="chat" id="chat" aria-live="polite">
+      <div class="msg a">Hi, I'm Heura Arche running locally for Brightloaf Bakery. Pick a task or type your own.</div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="row"><input id="inp" placeholder="Ask Heura Arche to do something..." aria-label="Message"><button class="go" id="send">Send</button></div>
+    <small>Answers come from the live model when the server is running; otherwise sample responses are shown.</small>
+  </div>
+
+  <div class="card">
+    <h2>Benchmarks (sample data)</h2>
+    <div class="tabs" id="tabs"></div>
+    <div id="bench"></div>
+  </div>
+
+  <div class="card">
+    <h2>Brightloaf results after 30 days (sample)</h2>
+    <div class="scroll"><table>
+      <tr><th>Metric</th><th>Before</th><th>With Heura Arche</th></tr>
+      <tr><td>Weekly report time</td><td>4 hrs</td><td class="ok">15 min</td></tr>
+      <tr><td>Website fixes turned around</td><td>~9 days</td><td class="ok">Same day</td></tr>
+      <tr><td>Monthly tech cost</td><td>$1,800 contractor</td><td class="ok">$0 ongoing</td></tr>
+      <tr><td>Inventory sync errors</td><td>11 / month</td><td class="ok">1 / month</td></tr>
+    </table></div>
+  </div>
+</div>
+
+<script>
+var tasks={
+ "Daily sales report":{t:"Done. I read the POS CSV and built a daily summary for both locations.",c:"import pandas as pd\ndf = pd.read_csv('pos_export.csv')\nsummary = df.groupby('location')['total'].sum()\nsummary.to_csv('daily_report.csv')\nprint(summary)"},
+ "Low stock alert":{t:"Here's a script that flags any item under its reorder level in your inventory sheet.",c:"low = inv[inv['qty'] < inv['reorder_level']]\nprint(low[['item','qty']])"},
+ "Fix mobile menu":{t:"The menu overflowed because of a fixed width. I changed it to a flexible one.",c:".nav{ width:100%; max-width:480px; }"}
+};
+var chat=document.getElementById('chat'),chips=document.getElementById('chips'),inp=document.getElementById('inp');
+function add(cls,html){var d=document.createElement('div');d.className='msg '+cls;d.innerHTML=html;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function run(q){
+  add('u',esc(q));
+  var r=tasks[q];
+  fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})})
+    .then(function(x){if(!x.ok)throw 0;return x.json()})
+    .then(function(d){add('a','<span style="white-space:pre-wrap">'+esc(d.reply)+'</span>')})
+    .catch(function(){
+      setTimeout(function(){
+        if(r)add('a',esc(r.t)+'<pre>'+esc(r.c)+'</pre>');
+        else add('a','The live model is offline right now. Try one of the sample tasks above.');
+      },500);
+    });
+}
+Object.keys(tasks).forEach(function(k){var b=document.createElement('button');b.className='chip';b.textContent=k;b.onclick=function(){run(k)};chips.appendChild(b)});
+document.getElementById('send').onclick=function(){if(inp.value.trim()){run(inp.value.trim());inp.value=''}};
+inp.addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('send').click()});
+
+var sets={
+ "Code tasks":[["Script generation (pass rate)",78,64],["Bug fixing",71,58],["Spreadsheet automation",84,69]],
+ "Speed":[["Tokens/sec on a laptop",62,45],["Time to first response",88,52]],
+ "Cost":[["Cost per task (lower is better, scaled)",12,100],["Monthly cost vs. engineer",5,100]]
+};
+var tabs=document.getElementById('tabs'),bench=document.getElementById('bench');
+function show(name){
+  Array.prototype.forEach.call(tabs.children,function(b){b.className='tab'+(b.textContent===name?' on':'')});
+  var h='<small>Blue-orange = Heura Arche (sample) &middot; grey = generic baseline (sample)</small>';
+  sets[name].forEach(function(r){
+    h+='<div class="bar"><div class="l"><span>'+r[0]+'</span><span>'+r[1]+' vs '+r[2]+'</span></div>'+
+    '<div class="track"><div class="fill" style="width:'+r[1]+'%"></div></div>'+
+    '<div class="track" style="margin-top:3px"><div class="fill alt" style="width:'+r[2]+'%"></div></div></div>';
+  });
+  bench.innerHTML=h;
+}
+Object.keys(sets).forEach(function(k){var b=document.createElement('button');b.className='tab';b.textContent=k;b.onclick=function(){show(k)};tabs.appendChild(b)});
+show("Code tasks");
+</script>
 </body>
 </html>
